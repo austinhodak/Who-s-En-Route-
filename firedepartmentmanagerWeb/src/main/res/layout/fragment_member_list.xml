@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/list"
+    android:name="com.fireapps.firedepartmentmanager.RespondingFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    app:layoutManager="LinearLayoutManager"
+    tools:context="com.fireapps.firedepartmentmanager.RespondingFragment"
+    tools:listitem="@layout/fragment_member" />
+
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/member_list_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_add_black_24dp"
+        app:fab_colorNormal="@color/primary"
+        app:fab_colorPressed="@color/primary"
+        app:fab_colorRipple="@color/primary_dark"/>
+
+    </FrameLayout>

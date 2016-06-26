@@ -1,0 +1,435 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:clipChildren="false">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        tools:ignore="UnusedAttribute"
+        android:layout_toLeftOf="@+id/callInfo_layout"
+        android:layout_toRightOf="@+id/frame_container" />
+
+    <FrameLayout
+        android:id="@+id/frame_container"
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        android:background="#424242" />
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_weight="1"
+        android:layout_toRightOf="@+id/frame_container"
+        android:layout_toEndOf="@+id/frame_container"
+        android:background="#303030"></RelativeLayout>-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_toRightOf="@+id/frame_container"
+        android:id="@+id/container_main"
+        android:layout_toLeftOf="@+id/map_layout"></FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="560dp"
+        android:layout_height="match_parent"
+        android:id="@+id/map_layout"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:id="@+id/callInfo_layout"
+        android:background="#424242"
+        android:elevation="5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CURRENT CALL"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:id="@+id/tv"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_below="@+id/tv"
+            android:id="@+id/v"
+            android:layout_marginTop="16dp" />
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/v">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/top_layout"
+                    android:layout_margin="16dp">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="VIEW MESSAGE"
+                        android:id="@+id/button2"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true" />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/button2"
+                        android:layout_marginRight="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ROCKY RIDGE ROAD"
+                            android:id="@+id/textView25"
+                            android:textSize="20sp"
+                            android:textColor="@color/primary_text" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="FITZGERALD LN"
+                            android:id="@+id/textView26"
+                            android:textSize="16sp"
+                            android:layout_below="@+id/textView25"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textColor="@color/secondary_text" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="BRUSH/STRUCTURE FIRE"
+                            android:id="@+id/textView27"
+                            android:layout_below="@+id/textView26"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/call_type_fire" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Remarks"
+                        android:id="@+id/textView30"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView31"
+                        android:layout_below="@+id/textView30"
+                        android:layout_marginTop="8dp"
+                        android:text="6110 REQUESTING UPGRADE TO STRUCTURE FIRE; 65, 52, 63 FULL ASSIST" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Times"
+                        android:id="@+id/textView29"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time of Call: 16:25, Responding: 16:30"
+                        android:id="@+id/textView28"
+                        android:textSize="16sp"
+                        android:layout_below="@+id/textView29"
+                        android:layout_marginTop="8dp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apparatus"
+                        android:id="@+id/textView32"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_text" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/textView32"
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/rl"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/button3"
+                            android:layout_toStartOf="@+id/button3">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rescue 652"
+                                android:id="@+id/textView33"
+                                android:textSize="20sp"
+                                android:textColor="#FFC107" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Not Responding, Driver Enroute"
+                                android:id="@+id/textView34"
+                                android:layout_below="@+id/textView33"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Update"
+                            android:id="@+id/button3"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider"
+                        android:layout_above="@+id/rl12" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl"
+                        android:layout_marginTop="8dp"
+                        android:id="@+id/rl12"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/button4"
+                            android:layout_toStartOf="@+id/button4">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tanker 654"
+                                android:id="@+id/textView35"
+                                android:textSize="20sp"
+                                android:textColor="#FFC107" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Not Responding, Driver At Hall"
+                                android:id="@+id/textView36"
+                                android:layout_below="@+id/textView35"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Update"
+                            android:id="@+id/button4"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/divider"
+                        android:layout_below="@+id/rl12" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl12"
+                        android:layout_marginTop="8dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/button5">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Utility 658"
+                                android:id="@+id/textView37"
+                                android:textSize="20dp"
+                                android:textColor="#4CAF50" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Responding for 1 MIN"
+                                android:id="@+id/textView38"
+                                android:layout_below="@+id/textView37"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Update"
+                            android:id="@+id/button5"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/divider"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="SEND ALERT"
+                        android:id="@+id/button"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_gravity="bottom"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="8dp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <!--<com.github.clans.fab.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_announcement_24dp"
+                fab:fab_colorNormal="#FFF"
+                fab:fab_colorPressed="@color/accent_A200"
+                fab:fab_colorRipple="@color/accent_A100"
+                android:id="@+id/callInfo_Urgent"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="true"
+                android:layout_above="@+id/respOff_reset"
+                android:layout_marginRight="8dp" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_map_white_24dp"
+                fab:fab_colorNormal="@color/accent_A400"
+                fab:fab_colorPressed="@color/accent_A200"
+                fab:fab_colorRipple="@color/accent_A100"
+                android:id="@+id/respOff_reset"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="true"
+                android:layout_above="@+id/ll"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="4dp" />-->
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

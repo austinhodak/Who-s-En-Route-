@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    app:bbn_badgeColor="#FFFF0000"
+    app:bbn_itemColorActive="#fff"
+    app:bbn_itemColorInactive="#99FFFFFF"
+    app:bbn_rippleColor="#33ffffff">
+
+    <item
+        android:id="@+id/bbn_item4"
+        android:color="#303030"
+        app:bbn_itemColorActive="#fff"
+        android:icon="@drawable/ic_block_black_24dp"
+        android:title="None" />
+
+    <item
+        android:id="@+id/bbn_item1"
+        android:color="#3D5AFE"
+        android:icon="@drawable/ic_location_city_black_24dp"
+        app:bbn_itemColorActive="#fff"
+        android:title="Station" />
+    <item
+        android:id="@+id/bbn_item2"
+        android:color="#607D8B"
+        android:icon="@drawable/ic_clear_24dp"
+        app:bbn_itemColorActive="#fff"
+        android:title="Can't Respond" />
+    <item
+        android:id="@+id/bbn_item3"
+        android:color="#FF5722"
+        android:icon="@drawable/ic_whatshot_24dp"
+        app:bbn_itemColorActive="#fff"
+        android:title="Scene" />
+</menu>

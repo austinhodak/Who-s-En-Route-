@@ -1,0 +1,110 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    tools:context="com.fireapps.firedepartmentmanager.RespondingFragment">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="4dp"
+        android:background="#424242"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingTop="24dp"
+            android:paddingRight="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Incident"
+                android:textSize="24sp"
+                android:paddingBottom="12dp"
+                android:textColor="#FFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 Responding"
+                android:id="@+id/repsonding_total"
+                android:paddingBottom="16dp" />
+
+        </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider"
+                 />
+
+
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerView_main"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp"></android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/respOff_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:menu_icon="@drawable/ic_replay_black_24dp"
+        fab:menu_colorNormal="#FFF"
+        fab:menu_colorPressed="#EEE"
+        fab:menu_colorRipple="#BDBDBD"
+        fab:menu_openDirection="up"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_above="@+id/ll"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="bottom|right">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_replay_black_24dp"
+            fab:fab_size="mini"
+            fab:fab_label="Reset Call"
+            fab:fab_colorNormal="#FFF"
+            fab:fab_colorPressed="#EEE"
+            fab:fab_colorRipple="#BDBDBD"
+            android:id="@+id/respOff_reset" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+    <ImageView
+        android:layout_width="256dp"
+        android:layout_height="256dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center"
+        android:src="@drawable/departmentlogo"
+        android:alpha="0.2" />
+
+</FrameLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Alert"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>-->
+
+    <eu.fiskur.chipcloud.ChipCloud
+        android:id="@+id/chip_cloud"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/apparatus_alertnew_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Title"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/apparatus_alertnew_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Description"
+        android:inputType="textCapSentences" />
+
+    <EditText
+        android:id="@+id/apparatus_alertnew_per"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Per"
+        android:inputType="textCapWords|textPersonName" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:layout_marginTop="16dp"
+        android:id="@+id/apparatus_alertnew_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

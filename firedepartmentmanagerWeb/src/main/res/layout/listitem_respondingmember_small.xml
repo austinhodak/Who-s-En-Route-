@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingRight="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="72dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/name_layout"
+        android:gravity="center_vertical">
+
+        <in.workarounds.typography.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Austin Hodak"
+            app:font_name="Roboto"
+            app:font_variant="Regular"
+            android:id="@+id/member_list_name"
+            android:textSize="20sp"
+            android:textColor="#FFF" />
+
+        <in.workarounds.typography.TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Junior Firefighter"
+            app:font_name="Roboto"
+            app:font_variant="Regular"
+            android:id="@+id/member_list_title"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="false"
+        android:text="STATION"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/res_list_to"
+        android:gravity="center_vertical"
+        android:textColor="#FFF"
+        android:background="@drawable/chip_station"
+        android:layout_toRightOf="@+id/time_layout"
+        android:layout_marginLeft="24dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_toRightOf="@+id/name_layout"
+        android:id="@+id/time_layout">
+
+        <in.workarounds.typography.TextView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font_name="RobotoCondensed"
+            app:font_variant="Regular"
+            android:textSize="13dp"
+            android:text="ENROUTE"
+            android:textColor="#FFF"
+            android:id="@+id/res_list_er" />
+
+        <in.workarounds.typography.TextView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font_name="RobotoCondensed"
+            app:font_variant="Bold"
+            android:textSize="17sp"
+            android:text="12:34"
+            android:textColor="#FFF"
+            android:id="@+id/res_list_timeER" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="Pittsfield"
+        android:textSize="20sp"
+        android:id="@+id/res_list_loc"
+        android:gravity="center_vertical"
+        android:textColor="#000"
+        android:background="@drawable/chip_location"
+        android:layout_toRightOf="@+id/res_list_to"
+        android:layout_marginLeft="8dp" />
+
+</RelativeLayout>

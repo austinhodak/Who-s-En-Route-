@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Out of Service"
+        android:id="@+id/resp_more_oos" />
+    <item android:title="Custom..."
+        android:id="@+id/resp_more_custom" />
+    <item android:title="Remove Self"
+        android:id="@+id/resp_more_remove" />
+</menu>

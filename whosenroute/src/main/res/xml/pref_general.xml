@@ -1,0 +1,89 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Responding Notifications">
+        <SwitchPreference
+            android:title="Send Notifications"
+            android:summary="Send notification to other members when you go enroute."
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <SwitchPreference
+            android:key="pref_resp_receive_enable"
+            android:title="Enable Responding Notification"
+            android:summary="Receive notifications when someone responds."
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <SwitchPreference
+            android:key="pref_resp_receive_ner"
+            android:dependency="pref_resp_receive_enable"
+            android:title="Receive Notifications When Not Enroute"
+            android:summary="Receive notifications when someone responds and you aren't responding."
+            android:maxLines="2"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Responding Location">
+        <SwitchPreference
+            android:key="pref_map_response_enable"
+            android:title="Enable Responding Location Tracking"
+            android:summary="Note: Even if this is disabled, you can still see other members."
+            android:maxLines="2"
+            android:ellipsize="marquee"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:defaultValue="PRIORITY_HIGH_ACCURACY"
+            android:dependency="pref_map_response_enable"
+            android:entries="@array/location_accuracy"
+            android:entryValues="@array/location_accuracy_values"
+            android:key="pref_map_response_accuracy"
+            android:title="Location Accuracy" />
+        <ListPreference
+            android:defaultValue="10000"
+            android:dependency="pref_map_response_enable"
+            android:entries="@array/location_interval"
+            android:entryValues="@array/location_interval_values"
+            android:key="pref_map_response_frequency"
+            android:title="Location Update Frequency" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Incident Notifications">
+        <SwitchPreference
+            android:key="pref_incident_notify_enable"
+            android:title="Enable Incident Notification"
+            android:summary="Receive notifications for new Incidents"
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <ListPreference
+            android:key="pref_incident_notify_type"
+            android:title="Notification Type"
+            android:entries="@array/settings_incident_type"
+            android:entryValues="@array/settings_incident_type"
+            android:dependency="pref_incident_notify_enable"
+            android:defaultValue="Popup Dialog"/>
+        <SwitchPreference
+            android:dependency="pref_incident_notify_enable"
+            android:key="pref_incident_notify_screenon"
+            android:title="Turn Screen On For New Incidents"
+            android:summary="Screen will turn on when new incident arrives."
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <RingtonePreference
+            android:ringtoneType="all"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:dependency="pref_incident_notify_enable"
+            android:persistent="true"
+            android:key="pref_incident_notify_ringtone"
+            android:defaultValue="content://settings/system/notification_sound"
+            android:title="Notification Sound" />
+        <SwitchPreference
+            android:dependency="pref_incident_notify_enable"
+            android:key="pref_incident_notify_vibrate"
+            android:title="Vibrate on Notification?"
+            android:maxLines="2"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

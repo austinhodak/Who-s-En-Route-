@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "779586893424",
+    "firebase_url": "https://fire-department-manager.firebaseio.com",
+    "project_id": "fire-department-manager",
+    "storage_bucket": "fire-department-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779586893424:android:3fdc24c3147d9acf",
+        "android_client_info": {
+          "package_name": "com.fireapps.firedepartmentmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779586893424-ueoijq6r5eqqgo5iadlp7u28p1l8bmno.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fireapps.firedepartmentmanager",
+            "certificate_hash": "3F3D8824BC520F7FB197912A922EE1A4FEB64435"
+          }
+        },
+        {
+          "client_id": "779586893424-5mbcrbckncme3q0b1v36m65vrjl2esi0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHhdoez_CTPhb9cEoh_MA62h4gIPmzZ3s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

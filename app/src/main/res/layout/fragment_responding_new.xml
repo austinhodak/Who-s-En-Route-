@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="24dp"
+    android:id="@+id/constraintLayout">
+
+    <LinearLayout
+        android:layout_height="72dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        android:layout_width="411dp"
+        android:background="@color/primary"
+        android:paddingLeft="72dp"
+        android:gravity="center_vertical"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:text="Station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView40"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="#000"
+            android:background="@drawable/chip_loc"
+            android:textColorLink="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:text="Can't Respond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView39"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textColor="#FFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:text="Scene"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView41"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textColor="#FFF"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="411dp"
+        android:layout_height="200dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="229dp" />
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.fireapps.whoisresponding.MainNavigation">
+    <item android:id="@+id/refresh_list" android:title="Refresh"
+        android:orderInCategory="99" app:showAsAction="never" />
+    <item android:id="@+id/call_department" android:title="@string/menu_responding_dept"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>

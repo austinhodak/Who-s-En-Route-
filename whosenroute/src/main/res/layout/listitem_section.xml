@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_marginLeft="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:text="Station"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+        android:gravity="center_vertical"
+        android:textStyle="normal|bold"
+        android:textColor="@color/md_red_500"
+        android:id="@+id/section" />
+
+</RelativeLayout>

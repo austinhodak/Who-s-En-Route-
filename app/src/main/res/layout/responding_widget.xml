@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STATION"
+        android:id="@+id/responding_widget_station"
+        android:layout_toLeftOf="@+id/responding_widget_nr"
+        android:layout_toStartOf="@+id/responding_widget_nr"
+        android:layout_alignParentLeft="true"
+        style="@style/HomeTheme"
+        android:layout_marginRight="4dp"
+        android:textSize="14sp"
+        android:background="@drawable/chip_loc" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NR"
+        android:id="@+id/responding_widget_nr"
+        android:layout_centerHorizontal="true"
+        android:minWidth="64dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:textSize="14sp"
+        style="@style/HomeTheme"
+        android:maxWidth="64dp"
+        android:backgroundTint="@color/primary" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SCENE"
+        android:id="@+id/responding_widget_scene"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/responding_widget_nr"
+        android:layout_toEndOf="@+id/responding_widget_nr"
+        style="@style/HomeTheme"
+        android:layout_marginLeft="4dp"
+        android:textSize="14sp"
+        android:backgroundTint="@color/primary" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ON LOCATION"
+        android:id="@+id/responding_button_onscene"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/responding_widget_nr"
+        android:layout_toEndOf="@+id/responding_widget_nr"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:textSize="14sp"
+        android:textColor="#FFF"
+        style="@style/HomeTheme"
+        android:visibility="gone"/>
+
+</RelativeLayout>

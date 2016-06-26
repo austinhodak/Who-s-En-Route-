@@ -1,0 +1,135 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Responding">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_resp_prompt"
+            android:summary="Confirm that you want to respond."
+            android:title="Responding Confirmation?" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="whoresp_sendpush"
+            android:summary="Send notifications when you respond?"
+            android:title="Send Notifications?" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="whoresp_pushenable"
+            android:summary="Receive alerts when someone goes enroute."
+            android:title="Enable Response Notifications?" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:dependency="whoresp_pushenable"
+            android:key="whoresp_pushWhenNotResponding"
+            android:summary="Receive alerts when you are not responding."
+            android:title="Receive Alerts When Not Responding?" />
+        <RingtonePreference
+            android:defaultValue=""
+            android:dependency="whoresp_pushenable"
+            android:key="pref_resp_notify_tone"
+            android:ringtoneType="notification"
+            android:title="Notification Sound" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="whoresp_pushenable"
+            android:key="pref_resp_notify_vibrate"
+            android:title="Vibrate on Notification?" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Response Mapping">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_map_response_enable"
+            android:summary="Allow other members to see your location only when responding."
+            android:title="Enable Tracking?" />
+        <ListPreference
+            android:defaultValue="PRIORITY_HIGH_ACCURACY"
+            android:dependency="pref_map_response_enable"
+            android:entries="@array/location_accuracy"
+            android:entryValues="@array/location_accuracy_values"
+            android:key="pref_map_response_accuracy"
+            android:title="Location Accuracy" />
+        <ListPreference
+            android:defaultValue="10000"
+            android:dependency="pref_map_response_enable"
+            android:entries="@array/location_interval"
+            android:entryValues="@array/location_interval_values"
+            android:key="pref_map_response_frequency"
+            android:title="Location Update Frequency" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Incidents">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="whoresp_incident_push_enable"
+            android:summary="Receive alerts when for new incidents."
+            android:title="Enable Incident Notifications?" />
+        <RingtonePreference
+            android:defaultValue=""
+            android:dependency="whoresp_incident_push_enable"
+            android:key="pref_resp_notify_tone"
+            android:ringtoneType="notification"
+            android:title="Notification Sound" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="whoresp_incident_push_enable"
+            android:key="pref_resp_notify_vibrate"
+            android:title="Vibrate on Notification?" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Incident Mapping">
+        <CheckBoxPreference
+            android:key="pref_map_incident_enable"
+            android:summary="Enable to map any current incidents."
+            android:title="Enable Incident Mapping?" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Other">
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="Test Testing"
+            android:enabled="false"
+            android:inputType="textCapWords"
+            android:key="whoresp_displayName"
+            android:maxLines="1"
+            android:selectAllOnFocus="false"
+            android:singleLine="true"
+            android:summary="Name that will be displayed to other users."
+            android:title="Display Name" />
+        <EditTextPreference
+            android:defaultValue="Netduma R1"
+            android:enabled="false"
+            android:key="whoresp_wifi"
+            android:summary="Netduma R1"
+            android:title="Department Wifi" />
+        <Preference
+            android:enabled="false"
+            android:key="disp_one"
+            android:summary="Click to select Dispatch Number"
+            android:title="Dispatch Email" />
+
+        <Preference
+            android:id="@+id/preference"
+            android:enabled="false"
+            android:key="disp_phone"
+            android:summary="814-563-3500"
+            android:title="Dispatch Phone" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Dev">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="devtesting"
+            android:title="Enable Dev Testing" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

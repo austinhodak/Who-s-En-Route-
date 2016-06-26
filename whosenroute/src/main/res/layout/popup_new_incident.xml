@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:background="@color/primary_dark"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/firealarm"/>
+        
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/popup_progress"
+            android:layout_marginLeft="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+        <TextView
+            android:id="@+id/popup_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MVA - ACCIDENT"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="16dp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/popup_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loc:MAIN (PIT) ST/ROUTE 6 Grid:G09A Units:ST65 Rmk:"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="15sp"
+        android:textColor="#000"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/popup_station"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respond to Station"
+        android:onClick="close"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
+
+    <Button
+        android:id="@+id/popup_scene"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Respond to Scene"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+    <Button
+        android:id="@+id/popup_cr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="Can't Respond"
+        android:textColor="@color/primary"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/popup_dismiss"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_weight="1"
+            android:text="Dismiss"
+            android:textColor="@color/primary"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp" />
+        <Button
+            android:id="@+id/popup_open"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_weight="1"
+            android:text="Open"
+            android:textColor="@color/primary"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="4dp" />
+    </LinearLayout>
+
+</LinearLayout>

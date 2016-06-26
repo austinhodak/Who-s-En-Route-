@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/apparatus_add_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="Apparatus Name"
+        android:inputType="textCapWords" />
+
+
+    <EditText
+        android:id="@+id/apparatus_add_abbrv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Abbreviation"
+        android:layout_marginBottom="8dp" />
+
+    <Switch
+        android:id="@+id/apparatus_add_inservice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="In Service"
+        android:textOff="No"
+        android:textOn="Yes" />
+
+</LinearLayout>

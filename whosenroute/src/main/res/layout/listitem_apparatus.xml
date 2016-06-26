@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/LI_app_layout"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/LI_app_image" />
+
+            <com.lb.auto_fit_textview.AutoResizeTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:text="6510"
+                android:padding="4dp"
+                android:layout_centerInParent="true"
+                android:elevation="0dp"
+                android:textStyle="normal|bold"
+                android:gravity="center"
+                android:id="@+id/LI_app_abbrv" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_toRightOf="@+id/LI_app_layout"
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:text="Tanker 654"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LI_app_name"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/text_responding_name" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

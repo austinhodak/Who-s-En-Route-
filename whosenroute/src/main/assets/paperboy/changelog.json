@@ -1,0 +1,87 @@
+[
+  {
+    "name": "3.0.0",
+    "items": [
+      {
+        "type": "F",
+        "title": "This library is now entirely written in Kotlin and the API changed a bit. But no new visible changes or features sorry :-(<br/><br/>See <a href=\"https://github.com/porokoro/paperboy/blob/develop/MIGRATION.md\">MIGRATION.md</a>."
+      }
+    ]
+  },
+  {
+    "name": "2.1.0",
+    "items": [
+      {
+        "type": "F",
+        "title": "When using <b>HTML</b> inside your items you can now use <a href=\"https://github.com/porokoro/paperboy\">links</a> as well."
+      }
+    ]
+  },
+  {
+    "name": "2.0.0",
+    "items": [
+      {
+        "type": "F",
+        "title": "Now <i>you</i> can use <b>HTML</b> tags in the <u>title</u>!"
+      },
+      {
+        "type": "C",
+        "title": "Custom view types are now available as well."
+      },
+      {
+        "type": "NOT_FOUND",
+        "title": "This entry has no specific type because it is not defined."
+      }
+    ]
+  },
+  {
+    "name": "1.0.1",
+    "items": [
+      {
+        "type": "B",
+        "title": "Damn I missed one... *slap slap slap* got him."
+      },
+      {
+        "type": "BUG",
+        "title": "Oops something went totally wrong last time. Let's hope this time it works ;-D"
+      },
+      {
+        "type": "I",
+        "title": "Everything new and shiny. We even have a cookie machine now!"
+      }
+    ]
+  },
+  {
+    "name": "1.0.0",
+    "items": [
+      {
+        "type": 1,
+        "title": "This is a sample Feature"
+      },
+      {
+        "type": 3,
+        "title": "This is a sample improvement"
+      },
+      {
+        "type": 2,
+        "title": "Got this bug, slammed with a huge swatter :D"
+      },
+      {
+        "type": 1,
+        "title": "This is a very very very long Feature, the text is so ridiculously long you can't believe it."
+      },
+      {
+        "type": 1,
+        "title": "And here we have the same text as before but to fill the sample page i just keep writing ;-)"
+      },
+      {
+        "type": 3,
+        "title": "Swooosh, here comes the next improvement. Now we can team up."
+      },
+      {
+        "type": 3,
+        "title": "Even a third improvement, wow this must be a large update! Oh wait, this is the first release isn't it? Never mind..."
+      }
+    ]
+  }
+]

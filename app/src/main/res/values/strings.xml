@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Fire Department Manager</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_login_chooser">LoginChooserActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_edit_profile">EditProfile</string>
+
+    <array name="titles">
+        <item>Responding</item>
+        <item>Maps</item>
+    </array>
+
+
+    <string-array name="positions_default">
+        <item>Select Position</item>
+        <item>Chief</item>
+        <item>Asst. Chief</item>
+        <item>Captain</item>
+        <item>Lieutenant</item>
+        <item>Firefighter</item>
+        <item>EMT</item>
+    </string-array>
+    <string name="title_activity_inspection">InspectionActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_on_location">OnLocationActivity</string>
+    <string name="menu_responding_dept">Call Department</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="verison">v0.2 Beta</string>
+    <string name="com.pubnub.secretKey" translatable="false">sec-c-MjM2MDA1NWItMjg1ZS00ZjkyLWEwMWYtYzIxZjA1ODVlYzk0</string>
+    <string name="com.pubnub.subscribeKey" translatable="false">sub-c-215a74ba-0441-11e6-a6c8-0619f8945a4f</string>
+    <string name="com.pubnub.publishKey" translatable="false">pub-c-2616f6fa-12d8-4ed2-8b97-b582a089c7e6</string>
+
+    <string name="com.optimizely.api_key" translatable="false">AANPdjcBf4UoSYxhONRdF0LLhE2oHmM0~5736922391</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_maps2">Map</string>
+    <string name="prefs_dialog_test_title">Enable Testing?</string>
+    <string name="prefs_dialog_test_content">CAUTION *You are about to enable dev testing, this WILL crash, possibly mess up your responding status and abililty to receive alerts. Enable at your own risk.</string>
+
+</resources>

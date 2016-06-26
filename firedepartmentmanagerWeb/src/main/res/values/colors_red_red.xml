@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="primary">#F44336</color>
+  <color name="primary_dark">#D32F2F</color>
+  <color name="primary_light">#FFCDD2</color>
+  <color name="accent">#FF5252</color>
+  <color name="primary_text">#FFFFFF</color>
+  <color name="secondary_text">#B3FFFFFF</color>
+  <color name="icons">#FFFFFF</color>
+  <color name="divider">#1FFFFFFF</color>
+  
+  <color name="accent_A400">#3D5AFE</color>
+  <color name="accent_A200">#536DFE</color>
+  <color name="accent_A100">#8C9EFF</color>
+
+  <color name="blue">#3F51B5</color>
+
+  <color name="material_drawer_dark_window_background">#303030</color>
+
+
+  <color name="call_type_fire">@color/primary</color>
+  <color name="call_type_ems">@color/accent_A400</color>
+  <color name="call_type_orange">@color/md_orange_500</color>
+</resources>

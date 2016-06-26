@@ -1,0 +1,213 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CoordinatorLayout01"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/empty_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:clickable="true"
+        android:text="No one responding."
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:id="@+id/call_layout"
+        android:background="@color/primary"
+        android:elevation="4dp"
+        android:minHeight="72dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="TREE/WIRES \nDOWN"
+            android:id="@+id/callLayout_Type"
+            android:textSize="16sp"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:textColor="#fff" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="1616 DAVEY HILL RD"
+            android:id="@+id/callLayout_Address"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:layout_toRightOf="@+id/callLayout_Type"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="8dp"
+            android:textColor="#fff"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="false"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/callLayout_MapButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/callLayout_MapButton"
+            android:layout_marginRight="8dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:visibility="visible"
+            android:text="VIEW MAP"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>-->
+
+
+    <it.sephiroth.android.library.bottomnavigation.BottomNavigation
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/l"
+        android:layout_gravity="bottom"
+        app:bbn_badgeProvider="@string/bbn_badgeProvider"
+        app:bbn_entries="@menu/bottom_menu"
+        app:bbn_scrollEnabled="false"
+        app:layout_behavior="@string/bbn_default_view_behavior" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/responding_ListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="60dp"
+        fab:layout_behavior="com.fireapps.firedepartmentmanager.FloatingActionButtonBehavior"
+        android:orientation="horizontal">
+
+        <!--<HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="-64dp"
+            android:layout_toLeftOf="@+id/respOff_fab"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chip_driverenroute"
+                    android:gravity="center_vertical"
+                    android:text="652"
+                    android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/chip_nodriver"
+                    android:gravity="center_vertical"
+                    android:text="654"
+                    android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/chip_atstation"
+                    android:gravity="center_vertical"
+                    android:text="658"
+                    android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                    android:textColor="#FFF"
+                    android:textSize="16sp"
+                    android:textStyle="normal|bold" />
+
+            </LinearLayout>
+        </HorizontalScrollView>-->
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/respOff_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="4dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|end"
+            fab:menu_colorNormal="#607D8B"
+            fab:menu_colorPressed="#607D8B"
+            fab:menu_colorRipple="#455A64"
+            fab:menu_icon="@drawable/ic_add_black_24dp"
+            fab:menu_openDirection="up">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/respOff_viewmap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_map_24dp"
+                android:visibility="gone"
+                fab:fab_colorNormal="@color/md_indigo_500"
+                fab:fab_colorPressed="@color/md_indigo_500"
+                fab:fab_colorRipple="@color/md_indigo_700"
+                fab:fab_label="View Map"
+                fab:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/respOff_sendalert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_announcement_24dp"
+                android:visibility="gone"
+                fab:fab_colorNormal="@color/md_orange_A700"
+                fab:fab_colorPressed="@color/md_orange_A700"
+                fab:fab_colorRipple="@color/md_orange_900"
+                fab:fab_label="Send Alert"
+                fab:fab_size="mini" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/respOff_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_restore_24dp"
+                fab:fab_colorNormal="#D50000"
+                fab:fab_colorPressed="#D50000"
+                fab:fab_colorRipple="#b71c1c"
+                fab:fab_label="Reset Call"
+                fab:fab_size="mini" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

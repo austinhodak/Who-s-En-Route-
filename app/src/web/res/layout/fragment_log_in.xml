@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.fireapps.firedepartmentmanager.LogInFragment">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/signUpScreen_LL">
+
+        <ImageView
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:id="@+id/imageView"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:id="@+id/textView3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#fff"
+            android:layout_marginTop="12dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="128dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/signUpScreen_LL"
+        android:background="@color/primary"
+        android:padding="8dp"
+        android:layout_centerHorizontal="true">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_baseColor="#FFF"
+            app:met_primaryColor="#fff"
+            app:met_iconLeft="@drawable/ic_vpn_key_white_24dp"
+            android:hint="Department ID"
+            android:id="@+id/login_departmentID"
+            android:enabled="false" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            app:met_baseColor="#fff"
+            app:met_primaryColor="#fff"
+            app:met_iconLeft="@drawable/ic_email_white_24dp"
+            android:hint="Email"
+            android:id="@+id/login_email"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:layout_weight="1" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:met_baseColor="#fff"
+            app:met_primaryColor="#fff"
+            app:met_iconLeft="@drawable/ic_lock_white_24dp"
+            android:hint="Password"
+            android:id="@+id/login_password"
+            android:inputType="textPassword"
+            android:singleLine="true" />
+
+    </LinearLayout>
+
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/login_fab_progress"
+        app:arcColor="@color/md_orange_500"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/login_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_white_24dp"
+            app:fab_colorNormal="@color/accent_A400"
+            app:fab_colorPressed="@color/accent_A200"
+            app:fab_colorRipple="@color/accent_A100" />
+
+    </com.github.jorgecastilloprz.FABProgressCircle>
+</RelativeLayout>
