@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="25dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/empty_layout">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@drawable/people"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No members found."
+                android:textStyle="normal|bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:layout_constraintTop_creator="0"
+        android:paddingTop="8dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="72dp"
+        android:id="@+id/apparatus_recyclerview" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/member_main_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right|end"
+        fab:layout_behavior="com.fireapps.firedepartmentmanager.FloatingActionButtonBehavior"
+        fab:menu_colorNormal="@color/fab_accent"
+        fab:menu_colorPressed="@color/fab_accent"
+        fab:menu_openDirection="up"
+        app:menu_icon="@drawable/ic_add_white_24dp">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/member_main_fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp_compat"
+            fab:fab_colorNormal="@color/md_teal_500"
+            fab:fab_colorPressed="@color/md_teal_500"
+            fab:fab_label="Add Member"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+</FrameLayout>

@@ -8,11 +8,16 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Department {
     boolean activeIncident;
+    String abbrv;
 
     public Department() {
     }
 
     public boolean isActiveIncident() {
         return activeIncident;
+    }
+
+    public String getAbbrv() {
+        return abbrv;
     }
 }

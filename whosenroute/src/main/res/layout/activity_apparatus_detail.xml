@@ -2,9 +2,11 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_incident_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.fireapps.firedepartmentmanager.IncidentDetailActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -16,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/toolbar_background"
             app:layout_scrollFlags="enterAlways"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -31,8 +33,11 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.CardView
+            app:cardBackgroundColor="@color/snackbar"
             android:layout_width="match_parent"
-            android:layout_margin="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:layout_height="wrap_content">
 
             <LinearLayout
@@ -48,12 +53,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="IN SERVICE"
+                    android:text="IN SERVICE • IN STATION"
                     android:textSize="14sp"
                     android:layout_marginBottom="16dp"
                     android:textStyle="normal|bold"
                     android:textColor="@color/md_red_500"
-                    android:id="@+id/section" />
+                    android:id="@+id/text_apparatus_status" />
 
                 <TextView
                     android:id="@+id/apparatus_info_name"
@@ -64,10 +69,60 @@
                     android:layout_marginBottom="4dp"
                     android:text="Tanker 654"/>
 
+                <TextView
+                    android:id="@+id/apparatus_info_status"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Out At Sheffield Parade until 15:00"
+                    android:layout_marginTop="8dp" />
+
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/apparatus_detail_alerts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/apparatus_main_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right|end"
+        fab:menu_colorNormal="@color/fab_accent"
+        fab:menu_colorPressed="@color/fab_accent"
+        app:srcCompat="@drawable/ic_add_white_24dp"
+        fab:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/apparatus_main_fab_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_status_compat"
+            fab:fab_colorNormal="@color/md_teal_500"
+            fab:fab_colorPressed="@color/md_teal_500"
+            fab:fab_colorRipple="@color/md_teal_700"
+            fab:fab_label="Status"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/apparatus_main_fab_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_announcement_compat"
+            fab:fab_colorNormal="@color/md_deep_orange_500"
+            fab:fab_colorPressed="@color/md_deep_orange_500"
+            fab:fab_colorRipple="@color/md_deep_orange_700"
+            fab:fab_label="New Alert"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

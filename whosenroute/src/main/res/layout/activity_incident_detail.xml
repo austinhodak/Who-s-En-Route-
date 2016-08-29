@@ -5,73 +5,161 @@
     android:id="@+id/activity_incident_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context="com.fireapps.firedepartmentmanager.IncidentDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:elevation="5dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="enterAlways"
+            android:background="@color/toolbar_background"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:elevation="5dp"
+            app:layout_scrollFlags="enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_margin="8dp"
-        android:layout_height="wrap_content">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/incident_detail_activeCard"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CALL DETAILS"
-            android:textSize="14sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="normal|bold"
-            android:textColor="@color/md_red_500"
-            android:id="@+id/section" />
-
-        <TextView
-            android:id="@+id/incident_info_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_responding_name"
-            android:textSize="20sp"
             android:layout_marginBottom="4dp"
-            android:text="FIRE-ASSIST"/>
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:cardBackgroundColor="@color/md_deep_orange_500">
 
-        <TextView
-            android:id="@+id/incident_info_desc"
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="Active Incident"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="Is this incident/message still active?"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/incident_detail_activeCard_buttonNO"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NO"
+                        android:textColor="#FFF" />
+
+                    <Button
+                        android:id="@+id/incident_detail_activeCard_buttonYES"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="YES"
+                        android:textColor="#FFF" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp"
-            android:text="Loc:31 BAILEY LN XSt:EXTENSION RD ROUTE 27 Grid:G07A Units:ST65 Rmk:STANDBY"/>
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="@color/snackbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/section"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_toStartOf="@+id/incident_info_date"
+                        android:text="MESSAGE DETAILS"
+                        android:textColor="@color/md_red_500"
+                        android:textSize="14sp"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/incident_info_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="8/17/16 12:34" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/incident_info_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="FIRE-ASSIST"
+                    android:textColor="@color/text_responding_name"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/incident_info_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Loc:31 BAILEY LN XSt:EXTENSION RD ROUTE 27 Grid:G07A Units:ST65 Rmk:STANDBY"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

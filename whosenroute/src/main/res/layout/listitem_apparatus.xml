@@ -38,25 +38,35 @@
 
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_toRightOf="@+id/LI_app_layout"
             android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="72dp"
             android:orientation="vertical"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="16dp">
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:text="Tanker 654"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LI_app_name"
-                android:gravity="center_vertical"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textColor="@color/text_responding_name" />
 
-        </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IN SERVICE"
+                android:textSize="14sp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/md_green_500"
+                android:id="@+id/LI_app_status"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

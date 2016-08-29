@@ -37,11 +37,11 @@ public class Message {
         return sender;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-
     public boolean isCompleted() {
         return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

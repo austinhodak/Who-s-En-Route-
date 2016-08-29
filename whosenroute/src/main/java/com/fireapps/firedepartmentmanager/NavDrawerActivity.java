@@ -1,20 +1,31 @@
 package com.fireapps.firedepartmentmanager;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,15 +34,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.porokoro.paperboy.PaperboyFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -42,92 +55,191 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mukesh.permissions.AppPermissions;
+import com.zplesac.connectionbuddy.ConnectionBuddy;
+import com.zplesac.connectionbuddy.interfaces.ConnectivityChangeListener;
+import com.zplesac.connectionbuddy.models.ConnectivityEvent;
+import com.zplesac.connectionbuddy.models.ConnectivityState;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 
-public class NavDrawerActivity extends AppCompatActivity implements View.OnClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
+public class NavDrawerActivity extends AppCompatActivity implements View.OnClickListener, ConnectivityChangeListener {
+
+    AccountHeader accountHeader;
+    Drawer drawer;
+    MenuItem incidentMenuItem;
+    List<DataSnapshot> incidentList = new ArrayList<>();
+    List<DataSnapshot> departmentMembers = new ArrayList<>();
+    boolean isReady;
     private String TAG = "NavDrawerActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    Toolbar toolbar;
-    AccountHeader accountHeader;
-    Drawer drawer;
     private DatabaseReference mDatabase, userRef;
     private BottomSheetBehavior<View> mBottomSheetBehavior;
-    FloatingActionButton mapFab;
-    MenuItem incidentMenuItem;
-    Button callInfoDismiss, callInfoComplete;
     private Animation zoomIn;
     private Animation zoomOut;
-    List<DataSnapshot> incidentList;
-    List<DataSnapshot> departmentMembers;
-    private TextView bottomIncidentTitle, bottomIncidentDesc;
-    boolean isReady;
     private String departmentID;
-    private View bottomSheet;
-    FrameLayout frameLayout;
-    com.miguelcatalan.materialsearchview.MaterialSearchView searchView;
     private SharedPreferences sharedPreferences;
+    private float elevation;
+    private MediaPlayer mediaPlayer;
+    private MenuItem playStreamMenu;
+    private MenuItem pauseStreamMenu;
+    private boolean mIsResponding;
+    private DatabaseReference userReference;
+    private FirebaseUser firebaseUser;
+    private boolean mIsLocationTrackingEnabled;
+    private Drawer secondDrawer;
+    private MaterialDialog dialog;
+    private Handler handler;
+    private DataSnapshot currentMember;
+    private HashMap<ProfileDrawerItem, DataSnapshot> departments = new HashMap<>(); //Garland, -------.
+    private List<DataSnapshot> departmentsList = new ArrayList<>();
+    private Fragment currentFragment;
+
+    private ValueEventListener departmentListener;
+
+    private MainActivityListener listener;
+
+    float pxBottomMargin;
+    private boolean mQuickRespondShortcutEnabled;
+
+    public void setMainActivityListener(MainActivityListener mainListener) {
+        this.listener = mainListener;
+    }
+
+    @BindView(R.id.home_connection)
+    LinearLayout connectionLayout;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.appbar)
+    AppBarLayout appBarLayout;
+
+    @BindView(R.id.frame_layout)
+    FrameLayout frameLayout;
+
+    @BindView(R.id.bottom_sheet)
+    View bottomSheet;
+
+//    @BindView(R.id.map_fab)
+//    FloatingActionButton mapFab;
+
+    @BindView(R.id.main_callInfo_complete)
+    Button callInfoComplete;
+
+    @BindView(R.id.main_callInfo_dismiss)
+    Button callInfoDismiss;
+
+    @BindView(R.id.bottom_incident_title)
+    TextView bottomIncidentTitle;
+
+    @BindView(R.id.bottom_incident_desc)
+    TextView bottomIncidentDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav_drawer);
+        ButterKnife.bind(this);
 
-        isReady = false;
+        Log.d(TAG, "onCreate: START");
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mIsLocationTrackingEnabled = sharedPreferences.getBoolean("pref_map_response_enable", false);
+        mQuickRespondShortcutEnabled = sharedPreferences.getBoolean("pref_responding_shortcut_menu", false);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
         toolbar.setSubtitleTextColor(Color.parseColor("#FFFFFF"));
-        /*toolbar.setTitle("MVA - ACCIDENT");
-        toolbar.setSubtitle("MAIN (PIT) ST/ROUTE 6");
-        setTitle("MVA - ACCIDENT");*/
+        toolbar.setSubtitle("Loading..");
+        toolbar.setSubtitle(sharedPreferences.getString("selectedDepartmentAbbrv", null));
 
-        incidentList = new ArrayList<>();
-        departmentMembers = new ArrayList<>();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            toolbar.setElevation(0);
+            appBarLayout.setElevation(0);
+        }
+
+        pxBottomMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, this.getResources().getDisplayMetrics());
+
+        setupFirebase();
+
+        isReady = false;
+        
+        Set<String> strings = sharedPreferences.getStringSet("departmentIds", null);
+
+        elevation = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+        //appBarLayout.setElevation(Math.round(elevation));
+        //toolbar.setElevation(Math.round(elevation));
+
+        loadDepartment(RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey());
+        loadRespondingMembers(RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey());
 
         createDrawer(savedInstanceState);
 
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-
-        bottomSheet = findViewById( R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
-        mapFab = (FloatingActionButton) findViewById(R.id.map_fab);
-        mapFab.setOnClickListener(this);
-        callInfoDismiss = (Button) findViewById(R.id.main_callInfo_dismiss);
+        //mapFab.setOnClickListener(this);
         callInfoDismiss.setOnClickListener(this);
-        callInfoComplete = (Button) findViewById(R.id.main_callInfo_complete);
         callInfoComplete.setOnClickListener(this);
+        //mapFab.hide();
 
         zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
         zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
 
-        bottomIncidentTitle = (TextView) findViewById(R.id.bottom_incident_title);
-        bottomIncidentDesc = (TextView) findViewById(R.id.bottom_incident_desc);
+        AppUpdater appUpdater = new AppUpdater(this);
+        appUpdater.start();
 
-        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        AppPermissions appPermissions = new AppPermissions(this);
+        if (!appPermissions.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            appPermissions.requestPermission(Manifest.permission.ACCESS_FINE_LOCATION, 0);
+        }
+
+        handleIntent(getIntent());
+
+        Log.d(TAG, "onCreate: FINISH");
+    }
+
+    private void setupFirebase() {
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            firebaseUser = user;
+        } else {
+            // No user is signed in
+        }
 
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -139,8 +251,6 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                     loadUserInformation(user);
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    FirebaseMessaging.getInstance().subscribeToTopic("incidents");
-
                     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                     Log.d("TAG:)", "Refreshed token: " + refreshedToken);
                 } else {
@@ -150,56 +260,195 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
             }
         };
 
-        AppUpdater appUpdater = new AppUpdater(this);
-        appUpdater.start();
+        userReference = mDatabase.child("users/" + firebaseUser.getUid());
+    }
 
-        Log.d("WER", getResources().getDisplayMetrics().density + "");
+    private void handleIntent(Intent intent) {
+        if (intent == null || intent.getAction() == null)
+            return;
+
+        String action = intent.getAction();
+
+        if (action.equals(Constants.ACTION_RESPONDING_STATION)) {
+            //RESPONDING TO STATION
+            updateRespondingStatus(0);
+        } else if (action.equals(Constants.ACTION_RESPONDING_SCENE)) {
+            //RESPONDING TO SCENE
+            updateRespondingStatus(1);
+        } else if (action.equals(Constants.ACTION_RESPONDING_CR)) {
+            //RESPONDING TO CR
+            updateRespondingStatus(2);
+        }
+    }
+
+    private void updateRespondingStatus(int mRespondingSelected) {
+        Intent locationService = new Intent(this, WLocationService.class);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        Date date = new Date();
+        String mLastUpdateTime = dateFormat.format(date);
+        mIsResponding = true;
+        switch (mRespondingSelected) {
+            case 0:
+                //Station
+                Map<String, Object> respondingToStation = new HashMap<String, Object>();
+                respondingToStation.put("respondingTo", "Station");
+                respondingToStation.put("isResponding", true);
+                respondingToStation.put("respondingTime", mLastUpdateTime);
+                userReference.updateChildren(respondingToStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
+                    }
+                });
+                if (mIsLocationTrackingEnabled)
+                    startService(locationService);
+                break;
+            case 1:
+                //Scene
+                Map<String, Object> respondingToScene = new HashMap<String, Object>();
+                respondingToScene.put("respondingTo", "Scene");
+                respondingToScene.put("isResponding", true);
+                respondingToScene.put("respondingTime", mLastUpdateTime);
+                userReference.updateChildren(respondingToScene).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
+                    }
+                });
+                if (mIsLocationTrackingEnabled)
+                    startService(locationService);
+                break;
+            case 2:
+                //Can't Respond
+                Map<String, Object> cantRespond = new HashMap<String, Object>();
+                cantRespond.put("respondingTo", "Can't Respond");
+                cantRespond.put("isResponding", true);
+                cantRespond.put("respondingTime", mLastUpdateTime);
+                userReference.updateChildren(cantRespond).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
+                    }
+                });
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                Map<String, Object> respondingReset = new HashMap<String, Object>();
+                respondingReset.put("respondingTo", "");
+                respondingReset.put("isResponding", false);
+                respondingReset.put("respondingTime", "");
+                respondingReset.put("location/currentLat", "");
+                respondingReset.put("location/currentLon", "");
+                userReference.updateChildren(respondingReset).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
+                        mIsResponding = false;
+                    }
+                });
+                if (mIsLocationTrackingEnabled)
+                    stopService(locationService);
+                break;
+        }
     }
 
     private void createDrawer(Bundle savedInstanceState) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             accountHeader = new AccountHeaderBuilder()
                     .withActivity(this)
+                    .withSavedInstance(savedInstanceState)
                     .addProfiles(
-                            new ProfileDrawerItem().withName("Loading..").withEmail("Loading..").withIcon(getDrawable(R.drawable.departmentlogo))
+                            new ProfileDrawerItem().withName("Loading..").withEmail("Loading..").withIdentifier(0).withIcon(getResources().getDrawable(R.drawable.departmentlogo))
+                            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                                @Override
+                                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                    FirebaseAuth.getInstance().signOut();
+                                    finish();
+                                    Intent intent = new Intent(NavDrawerActivity.this, LoginDispatch.class);
+                                    startActivity(intent);
+                                    return false;
+                                }
+                            })
                     )
                     .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                         @Override
-                        public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        public boolean onProfileChanged(View view, IProfile profile, boolean current) {
+                            Log.d(TAG, "onProfileChanged: " + profile);
+                            for (int i=0; i < departmentsList.size(); i++) {
+                                if (departmentsList.get(i).child("name").getValue().toString() == profile.getEmail().toString()) {
+                                    RespondingSystem.getInstance(NavDrawerActivity.this).setSelectedDepartment(departmentsList.get(i).getKey());
+
+                                    mDatabase.child("departments/" + departmentID).removeEventListener(departmentListener);
+                                    loadDepartment(departmentsList.get(i).getKey());
+                                    loadRespondingMembers(departmentsList.get(i).getKey());
+
+                                    try {
+                                        if (currentFragment != null){
+                                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                            ft.detach(currentFragment).attach(currentFragment).commit();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    toolbar.setSubtitle(departmentsList.get(i).child("abbrv").getValue().toString());
+                                    sharedPreferences.edit().putString("selectedDepartmentAbbrv", departmentsList.get(i).child("abbrv").getValue().toString()).apply();
+                                }
+                            }
                             return false;
                         }
                     })
                     .build();
-        } else {
-            accountHeader = new AccountHeaderBuilder()
-                    .withActivity(this)
-                    .addProfiles(
-                            new ProfileDrawerItem().withName("Loading..").withEmail("Loading..").withIdentifier(0).withIcon(getResources().getDrawable(R.drawable.departmentlogo))
-                    )
-                    .build();
-        }
 
-        Glide.with(this).load(R.drawable.wall).crossFade().into(accountHeader.getHeaderBackgroundView());
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            Glide.with(this).load(R.drawable.wallnight).centerCrop().crossFade().into(accountHeader.getHeaderBackgroundView());
+        } else {
+            Glide.with(this).load(R.drawable.wall).crossFade().into(accountHeader.getHeaderBackgroundView());
+        }
 
         PrimaryDrawerItem respondingItem = new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(R.drawable.radio).withIconTintingEnabled(false);
         PrimaryDrawerItem incidentItem = new PrimaryDrawerItem().withName(R.string.drawer_item_incident).withIcon(R.drawable.firealarm).withIconTintingEnabled(false);
         PrimaryDrawerItem apparatusItem = new PrimaryDrawerItem().withName(R.string.drawer_item_apparatus).withIcon(R.drawable.firetruck).withIconTintingEnabled(false);
         PrimaryDrawerItem mapItem = new PrimaryDrawerItem().withName(R.string.drawer_item_map).withIcon(R.drawable.globe).withIconTintingEnabled(false);
         PrimaryDrawerItem availablityItem = new PrimaryDrawerItem().withName("Availability").withIcon(R.drawable.clock);
+        PrimaryDrawerItem scannerItem = new PrimaryDrawerItem().withName("Scanner").withIcon(R.drawable.walkietalkie).withIconTintingEnabled(false);
+
+        ExpandableDrawerItem message_incidentItem = new ExpandableDrawerItem().withIdentifier(1001).withName("Messages • Incidents").withSelectable(false).withIcon(R.drawable.firealarm).withIconTintingEnabled(false).withSubItems(
+                new SecondaryDrawerItem().withName("Incidents").withIcon(R.drawable.documnet).withIconTintingEnabled(false),
+                new SecondaryDrawerItem().withName("Messages").withIcon(R.drawable.message).withIdentifier(2).withIconTintingEnabled(false)
+        );
+
+        PrimaryDrawerItem membersList = new PrimaryDrawerItem().withName("Members").withIcon(R.drawable.people).withIconTintingEnabled(false);
 
         drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(accountHeader)
+                .withSavedInstance(savedInstanceState)
                 .addDrawerItems(
                         respondingItem.withIdentifier(0),
                         mapItem.withIdentifier(1),
-                        incidentItem.withIdentifier(2),
+                        message_incidentItem,
                         apparatusItem.withIdentifier(3),
+                        scannerItem.withIdentifier(5),
                         //availablityItem.withIdentifier(4),
+                        new SectionDrawerItem().withName("Department Functions"),
+                        membersList.withIdentifier(6),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withSelectable(false).withName(R.string.drawer_item_settings).withIdentifier(10)
-                        //new SecondaryDrawerItem().withName("Changelog").withIdentifier(11)
+                        //new SecondaryDrawerItem().withSelectable(false).withName("Signup Test").withIdentifier(11)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -207,23 +456,71 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                         // do something with the clicked item :D
                         if (drawerItem.getIdentifier() == 10) {
                             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                            startActivity(intent);
+                            startActivityForResult(intent, 1001);
+                        } else {
+                            updateFragment((int) drawerItem.getIdentifier());
                         }
-                        updateFragment((int) drawerItem.getIdentifier());
                         return false;
                     }
                 })
                 .build();
 
+        getDepartments();
+
         if (savedInstanceState == null) {
-            // Do your oncreate stuff because there is no bundle
+            if(getIntent().getAction() == "stream") {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                ScannerFragment fragment = new ScannerFragment();
+                fragmentTransaction.replace(R.id.frame_layout, fragment);
+                fragmentTransaction.commit();
+                currentFragment = fragment;
+                drawer.setSelection(5, false);
+            }
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             WhosEnRouteFragment fragment = new WhosEnRouteFragment();
             fragmentTransaction.replace(R.id.frame_layout, fragment);
             fragmentTransaction.commit();
+            currentFragment = fragment;
 
             Log.d(TAG, "SavedInstanceState: null");
+        }
+        secondDrawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName("Call Dispatch").withIcon(R.drawable.headset).withIconTintingEnabled(false).withIdentifier(102).withSelectable(false)
+                )
+                .addStickyDrawerItems(
+                        new PrimaryDrawerItem().withName("Courtesy Message").withIcon(R.drawable.message).withIconTintingEnabled(false).withIdentifier(101).withSelectable(false)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        switch ((int)drawerItem.getIdentifier()) {
+                            case 102:
+                                break;
+                        }
+                        return false;
+                    }
+                })
+                .withDrawerGravity(Gravity.END)
+                .withSelectedItem(-1)
+                .append(drawer);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+
+        handler = new Handler();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001) {
+            startActivity(new Intent(this, LoginDispatch.class));
+            finish();
         }
     }
 
@@ -231,53 +528,158 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        ColorDrawable redColor = new ColorDrawable(getResources().getColor(R.color.newRed));
+        ColorDrawable greyBlueColor = new ColorDrawable(getResources().getColor(R.color.accent));
+        TransitionDrawable transitionDrawable = new TransitionDrawable(new Drawable[]{redColor, greyBlueColor});
+
+        TransitionDrawable normal = new TransitionDrawable(new Drawable[]{greyBlueColor, redColor});
+
         switch (identifier) {
             case 0:
                 WhosEnRouteFragment respondingFrag = new WhosEnRouteFragment();
                 fragmentTransaction.replace(R.id.frame_layout, respondingFrag, "responding");
                 fragmentTransaction.commit();
+                currentFragment = respondingFrag;
                 break;
             case 1:
                 MapFragment mapFrag = new MapFragment();
                 fragmentTransaction.replace(R.id.frame_layout, mapFrag, "map");
                 fragmentTransaction.commit();
+                currentFragment = mapFrag;
                 break;
             case 2:
                 IncidentListFragment incidentListFragment = new IncidentListFragment();
                 fragmentTransaction.replace(R.id.frame_layout, incidentListFragment, "incidentList");
                 fragmentTransaction.commit();
+                currentFragment = incidentListFragment;
                 break;
             case 3:
                 ApparatusListFragment apparatusListFragment = new ApparatusListFragment();
                 fragmentTransaction.replace(R.id.frame_layout, apparatusListFragment, "apparatusList");
                 fragmentTransaction.commit();
                 setTitle("Apparatus");
+                currentFragment = apparatusListFragment;
                 break;
             case 4:
                 AvailablityFragment availablityFragment = new AvailablityFragment();
                 fragmentTransaction.replace(R.id.frame_layout, availablityFragment, "availability");
                 fragmentTransaction.commit();
+                currentFragment = availablityFragment;
+                break;
+            case 5:
+                ScannerFragment scannerFragment = new ScannerFragment();
+                fragmentTransaction.replace(R.id.frame_layout, scannerFragment, "scanner");
+                fragmentTransaction.commit();
+                setTitle("Scanner");
+                currentFragment = scannerFragment;
+                break;
+            case 6:
+                MemberFragment membersListFragment = new MemberFragment();
+                fragmentTransaction.replace(R.id.frame_layout, membersListFragment, "memberFragment");
+                fragmentTransaction.commit();
+                setTitle("Members");
+                currentFragment = membersListFragment;
                 break;
             case 11:
-                //setTitle("Changelog");
-
-                //PaperboyFragment changelogFragment = new PaperboyFragment();
-                //fragmentTransaction.replace(R.id.frame_layout, changelogFragment, "changelog");
-                //fragmentTransaction.commit();
+                Intent signup = new Intent(this, FirstSignupActivity.class);
+                startActivity(signup);
+                break;
+            case 101:
+                //Courtesy Message
+                showCourtesyPopup();
+                break;
+            case 1001:
+                break;
             default:
                 WhosEnRouteFragment fragment = new WhosEnRouteFragment();
                 fragmentTransaction.replace(R.id.frame_layout, fragment, "responding");
                 fragmentTransaction.commit();
+                currentFragment = fragment;
                 break;
         }
 
-        if (identifier != 1 && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
-            Log.d("FAB", "SHOW");
-            mapFab.show();
-        } else {
+//        try {
+//            if (identifier != 1 && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+//                Log.d("FAB", "SHOW");
+//                mapFab.show();
+//            } else {
+//                mapFab.hide();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        /*if (identifier == 1) {
             mapFab.hide();
-        }
+        } else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+            mapFab.hide();
+        } else {
+            mapFab.show();
+        }*/
+
+        if (listener != null)
+        listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
     }
+
+    String[] array = new String[]{"Mom", "Wife", "Kid"};
+
+    int courtesyCountdown = 10;
+    private void showCourtesyPopup() {
+
+        dialog = new MaterialDialog.Builder(this)
+                .title("Courtesy Message")
+                .items(array)
+                .widgetColorRes(R.color.primary)
+                .neutralColorRes(R.color.primary)
+                .positiveColorRes(R.color.primary)
+                .negativeColorRes(R.color.primary)
+                .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        return true;
+                    }
+                })
+                .positiveText("SEND")
+                .negativeText("CANCEL")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })
+                .show();
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                handler.removeCallbacks(runnable);
+            }
+        });
+        courtesyCountdown = 10;
+        runnable.run();
+        //secondDrawer.closeDrawer();
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            courtesyCountdown--;
+            if (courtesyCountdown > 0) {
+                dialog.setActionButton(DialogAction.POSITIVE, "Sending In " + courtesyCountdown + " Seconds");
+                handler.postDelayed(runnable, 1000);
+            } else if (courtesyCountdown == 0) {
+                dialog.setActionButton(DialogAction.POSITIVE, "Sending...");
+                dialog.dismiss();
+                handler.removeCallbacks(runnable);
+            }
+        }
+    };
 
     private void loadUserInformation(FirebaseUser user) {
         final ProfileDrawerItem profileDrawerItem = (ProfileDrawerItem) accountHeader.getActiveProfile();
@@ -285,21 +687,29 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Member member = dataSnapshot.getValue(Member.class);
+                final Member member = dataSnapshot.getValue(Member.class);
                 if (member != null) {
-                    profileDrawerItem.withEmail(member.getEmail());
-                    profileDrawerItem.withName(member.getName());
-                    accountHeader.updateProfile(profileDrawerItem);
 
-                    departmentID = member.getDepartment();
-                    sharedPreferences.edit().putString("departmentID", departmentID).apply();
-                    sharedPreferences.edit().putString("memberKey", dataSnapshot.getKey()).apply();
+                    if (member.getDepartment() != null) {
+                        departmentID = member.getDepartment();
+                        sharedPreferences.edit().putString("departmentID", departmentID).apply();
+                        sharedPreferences.edit().putString("memberKey", dataSnapshot.getKey()).apply();
+                    }
 
-                    loadDepartment(member.getDepartment());
-                    loadRespondingMembers(member.getDepartment());
+                    Log.d(TAG, "onDataChange: USER LOADED");
 
-                    Application application = ((Application)getApplicationContext());
-                    application.setCurrentMember(member);
+                    try {
+                        List<IProfile> profiles = accountHeader.getProfiles();
+                        for (int i = 0; i < profiles.size(); i++) {
+                            IProfile profile = profiles.get(i);
+                            profile.withName(dataSnapshot.child("name").getValue().toString());
+                            accountHeader.updateProfile(profile);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    currentMember = dataSnapshot;
+
                 }
             }
 
@@ -314,7 +724,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void loadDepartment(final String departmentID) {
-        ValueEventListener postListener = new ValueEventListener() {
+        departmentListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
@@ -331,44 +741,52 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                 // ...
             }
         };
-        mDatabase.child("departments/" + departmentID).addValueEventListener(postListener);
+        mDatabase.child("departments/" + departmentID).addValueEventListener(departmentListener);
     }
 
     private void checkForIncidents(Department department, String departmentID) {
         Log.d("Incident", department.isActiveIncident() + "");
         if (department.isActiveIncident()) {
+            //Load then Show.
             bottomSheet.setVisibility(View.VISIBLE);
 
             //Currently Active Incident, Grab Info Show Sheet
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            mBottomSheetBehavior.setHideable(false);
 
 
-            Resources r = getResources();
-            float pxBottomMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, r.getDisplayMetrics());
-
-            frameLayout.setPadding(0,0,0,Math.round(pxBottomMargin));
+            frameLayout.setPadding(0, 0, 0, Math.round(pxBottomMargin));
 
             loadActiveIncidents(department, departmentID);
 
             if (drawer.getCurrentSelection() != 1) {
-                mapFab.show();
-                mapFab.setVisibility(View.VISIBLE);
+                //mapFab.show();
+                //mapFab.setVisibility(View.VISIBLE);
             }
+            if (listener != null)
+            listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
         } else {
-            mapFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+/*            mapFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                 @Override
                 public void onHidden(FloatingActionButton fab) {
                     super.onHidden(fab);
-                    mBottomSheetBehavior.setHideable(true);
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    frameLayout.setPadding(0,0,0,0);
+
                 }
-            });
+            });*/
+            mBottomSheetBehavior.setHideable(true);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            frameLayout.setPadding(0, 0, 0, 0);
+            if (listener != null)
+                listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
         }
     }
 
+    public int getBottomSheet() {
+        return mBottomSheetBehavior.getState();
+    }
+
     private void loadActiveIncidents(Department department, String departmentID) {
-        DatabaseReference departmentRef = mDatabase.child("departments").child(departmentID).child("messages");
+        Query departmentRef = mDatabase.child("departments").child(departmentID).child("messages").limitToLast(1);
         departmentRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -438,6 +856,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        ConnectionBuddy.getInstance().registerForConnectivityEvents(this, this);
     }
 
     @Override
@@ -446,6 +865,8 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+        ConnectionBuddy.getInstance().unregisterFromConnectivityEvents(this);
+
     }
 
     @Override
@@ -453,7 +874,12 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         incidentMenuItem = menu.findItem(R.id.menu_incident_main);
-
+        playStreamMenu = menu.findItem(R.id.menu_stream_play);
+        pauseStreamMenu = menu.findItem(R.id.menu_stream_pause);
+        MenuItem quickRespond = menu.findItem(R.id.menu_quick_respond);
+        if (mQuickRespondShortcutEnabled) {
+            quickRespond.setVisible(true);
+        }
         return true;
     }
 
@@ -462,7 +888,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
         switch (item.getItemId()) {
             case R.id.menu_incident_main:
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                mapFab.show();
+                //mapFab.show();
                 mBottomSheetBehavior.setHideable(false);
                 mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                     @Override
@@ -471,6 +897,8 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                             incidentMenuItem.setVisible(false);
                             mBottomSheetBehavior.setBottomSheetCallback(null);
                         }
+                        if (listener != null)
+                        listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
                     }
 
                     @Override
@@ -478,7 +906,27 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 });
-                return true;
+                frameLayout.setPadding(0, 0, 0, Math.round(pxBottomMargin));
+                if (listener != null)
+                listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
+                break;
+            case R.id.menu_location_get:
+                Intent intent = new Intent(this, WLocationService.class);
+                startService(intent);
+                break;
+            case R.id.menu_location_stop:
+                stopService(new Intent(this, WLocationService.class));
+                break;
+            case R.id.menu_responding_clear:
+                resetMembersResponding();
+                break;
+            case R.id.menu_stream_play:
+                Intent intent1 = new Intent(this, AudioFeedService.class);
+                startService(intent1);
+                break;
+            case R.id.menu_stream_pause:
+
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -487,20 +935,25 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_callInfo_dismiss:
-                mapFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                /*mapFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
                     @Override
                     public void onHidden(FloatingActionButton fab) {
                         super.onHidden(fab);
-                        mBottomSheetBehavior.setHideable(true);
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-                        incidentMenuItem.setVisible(true);
                     }
-                });
+                });*/
+                mBottomSheetBehavior.setHideable(true);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+                incidentMenuItem.setVisible(true);
+                frameLayout.setPadding(0, 0, 0, 0);
+
+                if (listener != null)
+                    listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
                 break;
             case R.id.map_fab:
                 if (drawer.getCurrentSelection() != 1)
-                drawer.setSelection(1);
+                    drawer.setSelection(1);
                 break;
             case R.id.main_callInfo_complete:
                 if (!isReady) {
@@ -513,7 +966,9 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                         .titleGravity(GravityEnum.CENTER)
                         .items(items)
                         .itemsGravity(GravityEnum.CENTER)
-                        .itemsColor(getResources().getColor(R.color.bottom_sheet_title))
+                        .itemsColorRes(R.color.text_responding_name)
+                        .backgroundColorRes(R.color.bottom_sheet_background)
+                        .widgetColor(getResources().getColor(R.color.new_accent))
                         .itemsCallback(new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
@@ -540,19 +995,19 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void completeIncident() {
-        Map<String, Object> updates = new HashMap<String, Object>();
+        Map<String, Object> updates = new HashMap<>();
 
         for (DataSnapshot postSnapshot : incidentList) {
             updates.put("messages/" + postSnapshot.getKey() + "/activeIncident", false);
         }
 
-        updates.put("departments/" + departmentID + "/activeIncident", false);
+        updates.put("departments/" + RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey() + "/activeIncident", false);
 
         mDatabase.updateChildren(updates);
     }
 
     private void resetMembersResponding() {
-        Map<String, Object> updates = new HashMap<String, Object>();
+        Map<String, Object> updates = new HashMap<>();
 
         for (DataSnapshot postSnapshot : departmentMembers) {
             updates.put(postSnapshot.getKey() + "/respondingTo", "");
@@ -561,12 +1016,14 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
             updates.put(postSnapshot.getKey() + "/respondingTime", "");
             updates.put(postSnapshot.getKey() + "/location/currentLat", "");
             updates.put(postSnapshot.getKey() + "/location/currentLon", "");
+            updates.put(postSnapshot.getKey() + "/respondingAgency", "");
         }
 
         mDatabase.child("users").updateChildren(updates);
     }
 
     private void loadRespondingMembers(String department) {
+        departmentMembers.clear();
         DatabaseReference departmentRef = mDatabase.child("departments").child(department).child("members");
         departmentRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -620,11 +1077,127 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onBackPressed() {
-        if (searchView.isSearchOpen()) {
-            searchView.closeSearch();
-        } else {
-            super.onBackPressed();
+    protected void onResume() {
+        super.onResume();
+//        if (drawer.getCurrentSelection() != 0) {
+//            appBarLayout.setElevation(Math.round(elevation));
+//            toolbar.setElevation(Math.round(elevation));
+//        } else {
+//            appBarLayout.setElevation(0);
+//            toolbar.setElevation(0);
+//        }
+//        Log.d("DRAWER", "" + drawer.getCurrentSelection());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        outState = drawer.saveInstanceState(outState);
+//        outState = accountHeader.saveInstanceState(outState);
+//        outState.putString("title", (String) toolbar.getTitle());
+//        outState.putString("titleColor", sharedPreferences.getString("hometoolbarcolor", "#E51C23"));
+//        outState.putInt("statusColor", getWindow().getStatusBarColor());
+        super.onSaveInstanceState(outState);
+    }
+
+    public void getDepartments() {
+        Log.d(TAG, "getDepartments: ");
+        if (currentMember == null) {
+            RespondingSystem.getInstance(getApplicationContext()).loadInitialData().setDepartmentListener(new RespondingSystem.DepartmentListener() {
+                @Override
+                public void onDepartmentAdded(DataSnapshot snapshot, Uri icon) {
+
+                    try {
+                        Member member = null;
+                        try {
+                            member = currentMember.getValue(Member.class);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        accountHeader.removeProfileByIdentifier(0);
+
+                        final ProfileDrawerItem profileDrawerItem1 = new ProfileDrawerItem().withIcon(R.drawable.default_fdicon).withName(RespondingSystem.getInstance(getApplicationContext()).getUserName()).withEmail(snapshot.child("name").getValue().toString());
+                        accountHeader.addProfile(profileDrawerItem1, accountHeader.getProfiles().size());
+
+                        departmentsList.add(snapshot);
+
+//                    Glide.with(getApplicationContext()).load(icon).asBitmap().into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            profileDrawerItem1.withIcon(resource);
+//                            accountHeader.updateProfile(profileDrawerItem1);
+//                        }
+//                    });
+
+                        if (RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey().equals(snapshot.getKey())) {
+                            accountHeader.setActiveProfile(profileDrawerItem1, true);
+                            Log.d(TAG, "onDepartmentAdded: Selected Department" + profileDrawerItem1.getEmail());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onDepartmentUpdated(DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onLoadingFinished() {
+                    Log.d(TAG, "onLoadingFinished: ");
+                }
+
+                @Override
+                public void onDepartmentAddedFirstTime(DataSnapshot snapshot) {
+                    try {
+                        Member member = null;
+                        try {
+                            member = currentMember.getValue(Member.class);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        accountHeader.removeProfileByIdentifier(0);
+
+                        final ProfileDrawerItem profileDrawerItem1 = new ProfileDrawerItem().withIcon(R.drawable.default_fdicon).withName(RespondingSystem.getInstance(getApplicationContext()).getUserName()).withEmail(snapshot.child("name").getValue().toString());
+                        accountHeader.addProfile(profileDrawerItem1, accountHeader.getProfiles().size());
+
+                        departmentsList.add(snapshot);
+                        accountHeader.setActiveProfile(profileDrawerItem1, true);
+
+//                    Glide.with(getApplicationContext()).load(icon).asBitmap().into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            profileDrawerItem1.withIcon(resource);
+//                            accountHeader.updateProfile(profileDrawerItem1);
+//                        }
+//                    });
+
+//                        if (RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey().equals(snapshot.getKey())) {
+//                            accountHeader.setActiveProfile(profileDrawerItem1, true);
+//                            Log.d(TAG, "onDepartmentAdded: Selected Department" + profileDrawerItem1.getEmail());
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
+
+    @Override
+    public void onConnectionChange(ConnectivityEvent event) {
+        if (event.getState() == ConnectivityState.CONNECTED) {
+            //Connection Present
+            connectionLayout.setVisibility(View.GONE);
+        } else {
+            //No Connection
+            connectionLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public interface MainActivityListener {
+        public void onBottomSheetChanged(int bottomSheet);
+    }
+
+
 }

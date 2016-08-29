@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:clipToPadding="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/signuptwo_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="38sp"
+            android:textColor="#FFF"
+            android:text="Join Department"/>
+
+        <TextView
+            android:id="@+id/signuptwo_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#FFF"
+            android:layout_marginTop="12dp"
+            android:text="Click a method below to join a department."
+            android:gravity="center_horizontal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/signuptwo_buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/signuptwo_qrButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textColor="@color/primary"
+            android:layout_weight="1"
+            android:text="QR Code™"/>
+
+        <Button
+            android:id="@+id/signuptwo_codeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/primary"
+            android:layout_weight="1"
+            android:text="PIN"/>
+
+    </LinearLayout>
+
+    <SurfaceView
+        android:layout_centerInParent="true"
+        android:id="@+id/signup_qr"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:visibility="visible" />
+
+    <ProgressBar
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:id="@+id/signuptwo_pg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/signuptwo_deptinfo"
+        android:theme="@style/SignupTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="8dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="24dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Department Name"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="16dp" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Warren County Dispatch"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="16dp" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Warren County Dispatch"
+                    android:textColor="#000000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp">
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/signuptwo_deptinfo_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:textColor="@color/primary"
+                    android:layout_weight="1"/>
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/signuptwo_deptinfo_yes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:textColor="@color/primary"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+        <com.github.glomadrian.codeinputlib.CodeInput
+            android:visibility="gone"
+            android:id="@+id/pin_layout"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            app:hint_text="Pin Code"
+            app:text_color="#FFFFFF"
+            app:underline_color="#FFFFFF"
+            app:underline_selected_color="#FFFFFF"
+            app:hint_color="#FFFFFF"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerVertical="false"
+            android:layout_centerHorizontal="false"
+            android:layout_centerInParent="true" />
+
+</RelativeLayout>

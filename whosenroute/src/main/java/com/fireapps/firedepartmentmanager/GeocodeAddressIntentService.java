@@ -3,6 +3,7 @@ package com.fireapps.firedepartmentmanager;
 /**
  * Created by austinhodak on 6/19/16.
  */
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Address;
@@ -34,9 +35,8 @@ public class GeocodeAddressIntentService extends IntentService {
     public static final String LOCATION_LONGITUDE_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_LONGITUDE_DATA_EXTRA";
     public static final String LOCATION_NAME_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_NAME_DATA_EXTRA";
     public static final String FETCH_TYPE_EXTRA = PACKAGE_NAME + ".FETCH_TYPE_EXTRA";
-
-    protected ResultReceiver resultReceiver;
     private static final String TAG = "GEO_ADDY_SERVICE";
+    protected ResultReceiver resultReceiver;
 
     public GeocodeAddressIntentService() {
         super("GeocodeAddressIntentService");
@@ -52,7 +52,7 @@ public class GeocodeAddressIntentService extends IntentService {
         int fetchType = intent.getIntExtra(FETCH_TYPE_EXTRA, 0);
         Log.e(TAG, "fetchType == " + fetchType);
 
-        if(fetchType == USE_ADDRESS_NAME) {
+        if (fetchType == USE_ADDRESS_NAME) {
             String name = intent.getStringExtra(LOCATION_NAME_DATA_EXTRA);
             try {
                 addresses = geocoder.getFromLocationName(name, 1);
@@ -60,8 +60,7 @@ public class GeocodeAddressIntentService extends IntentService {
                 errorMessage = "Service not available";
                 Log.e(TAG, errorMessage, e);
             }
-        }
-        else if(fetchType == USE_ADDRESS_LOCATION) {
+        } else if (fetchType == USE_ADDRESS_LOCATION) {
             double latitude = intent.getDoubleExtra(LOCATION_LATITUDE_DATA_EXTRA, 0);
             double longitude = intent.getDoubleExtra(LOCATION_LONGITUDE_DATA_EXTRA, 0);
 
@@ -76,23 +75,22 @@ public class GeocodeAddressIntentService extends IntentService {
                         "Latitude = " + latitude + ", Longitude = " +
                         longitude, illegalArgumentException);
             }
-        }
-        else {
+        } else {
             errorMessage = "Unknown Type";
             Log.e(TAG, errorMessage);
         }
 
         resultReceiver = intent.getParcelableExtra(RECEIVER);
-        if (addresses == null || addresses.size()  == 0) {
+        if (addresses == null || addresses.size() == 0) {
             if (errorMessage.isEmpty()) {
                 errorMessage = "Not Found";
                 Log.e(TAG, errorMessage);
             }
             deliverResultToReceiver(FAILURE_RESULT, errorMessage, null);
         } else {
-            for(Address address : addresses) {
+            for (Address address : addresses) {
                 String outputAddress = "";
-                for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                     outputAddress += " --- " + address.getAddressLine(i);
                 }
                 Log.e(TAG, outputAddress);
@@ -100,7 +98,7 @@ public class GeocodeAddressIntentService extends IntentService {
             Address address = addresses.get(0);
             ArrayList<String> addressFragments = new ArrayList<>();
 
-            for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
                 addressFragments.add(address.getAddressLine(i));
             }
             Log.i(TAG, "Address Found");

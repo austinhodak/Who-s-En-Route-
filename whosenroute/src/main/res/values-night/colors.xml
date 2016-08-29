@@ -4,7 +4,7 @@
 
     <!-- OVERWRITE THESE COLORS FOR A DARK THEME -->
     <!-- MaterialDrawer DEFAULT DARK colors -->
-    <color name="material_drawer_background">#303030</color>
+    <color name="material_drawer_background">#061E2D</color>
     <!-- MaterialDrawer DEFAULT DARK text / items colors -->
     <color name="material_drawer_primary_text">#DEFFFFFF</color>
     <color name="material_drawer_primary_icon">#8AFFFFFF</color>
@@ -12,10 +12,21 @@
     <color name="material_drawer_hint_text">#42FFFFFF</color>
     <color name="material_drawer_divider">#1FFFFFFF</color>
     <!-- MaterialDrawer DEFAULT DARK drawer colors -->
-    <color name="material_drawer_selected">#202020</color>
-    <color name="material_drawer_selected_text">@color/material_drawer_primary</color>
+    <color name="material_drawer_selected">#07263B</color>
+    <color name="material_drawer_selected_text">#FFF</color>
     <color name="material_drawer_header_selection_text">#FFF</color>
 
-    <color name="bottom_sheet_background">#424242</color>
+    <color name="bottom_sheet_background">#09314B</color>
     <color name="bottom_sheet_title">#FFFFFF</color>
+
+    <color name="background">#0A1722</color>
+
+    <color name="toolbar_background">#09314B</color>
+    <color name="statusbar_background">#07263B</color>
+    <color name="new_accent">#19c4d8</color>
+    <color name="snackbar">#09314B</color>
+
+    <color name="fab_accent">#19c4d8</color>
+
+    <color name="button_background">#061E2D</color>
 </resources>

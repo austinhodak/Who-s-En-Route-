@@ -1,28 +1,20 @@
 package com.fireapps.firedepartmentmanager;
 
-import android.*;
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -32,22 +24,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -57,7 +46,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,9 +53,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
@@ -77,7 +63,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  * Created by austinhodak on 6/15/16.
  */
 
-public class WhosEnRouteFragment extends Fragment implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, LocationListener, GoogleApiClient.OnConnectionFailedListener {
+public class WhosEnRouteFragment extends Fragment implements View.OnClickListener {
 
     ImageView moreButton;
     TextView mStation, mScene, mCantRespond;
@@ -92,14 +78,15 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
     MySection stationSection, sceneSection, CRSection, atStationSection, unknownSection;
     RelativeLayout emptyLayout;
     RecyclerView recyclerView;
-    private BottomSheetBehavior mBottomSheetBehavior;
-
     boolean mIsLocationTrackingEnabled;
+    boolean mIsResponding = false;
+    private BottomSheetBehavior mBottomSheetBehavior;
     private SharedPreferences sharedPreferences;
     private GoogleApiClient mGoogleApiClient;
-    boolean mIsResponding = false;
     private LocationRequest mLocationRequest;
     private Member mCurrentMember;
+    private boolean mRespondingConfirm;
+    private LinearLayout mParentLayout;
 
     public WhosEnRouteFragment() {
     }
@@ -118,6 +105,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mIsLocationTrackingEnabled = sharedPreferences.getBoolean("pref_map_response_enable", false);
+        mRespondingConfirm = sharedPreferences.getBoolean("pref_responding_confirm_status", true);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -127,14 +115,12 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             // No user is signed in
         }
 
-
-        setUpGoogleApi();
-
         getActivity().setTitle("Who's En Route?");
         Log.d("RespondingUser", firebaseUser.getUid());
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         userReference = firebaseDatabase.getReference("users/" + firebaseUser.getUid());
+        userReference.keepSynced(true);
 
         moreButton = (ImageView) view.findViewById(R.id.responding_more);
         moreButton.setOnClickListener(this);
@@ -153,8 +139,27 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         mStationPB = (ProgressBar) view.findViewById(R.id.responding_station_pb);
         mCantRespondPB = (ProgressBar) view.findViewById(R.id.responding_cr_pb);
         mScenePB = (ProgressBar) view.findViewById(R.id.responding_scene_pb);
+        mParentLayout = (LinearLayout) view.findViewById(R.id.linearLayout);
 
         emptyLayout = (RelativeLayout) view.findViewById(R.id.empty_layout);
+        final ImageView imageView = (ImageView)view.findViewById(R.id.imageView);
+        final RotateAnimation anim = new RotateAnimation(0.0f, -7.0f, Animation.RELATIVE_TO_SELF, 0.4f, Animation.RELATIVE_TO_SELF, 0.85f);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setDuration(30);
+        //imageView.startAnimation(anim);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (imageView.getAnimation() != null) {
+                    imageView.clearAnimation();
+                } else {
+                    imageView.startAnimation(anim);
+                }
+            }
+        });
 
         sectionAdapter = new SectionedRecyclerViewAdapter();
 
@@ -191,28 +196,28 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                             }
                             for (Member object : listScene) {
                                 if (object.getName().equals(member.getName())) {
-                                    index= listScene.indexOf(object);
+                                    index = listScene.indexOf(object);
                                     listScene.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
                             for (Member object : listCR) {
                                 if (object.getName().equals(member.getName())) {
-                                    index= listCR.indexOf(object);
+                                    index = listCR.indexOf(object);
                                     listCR.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
                             for (Member object : listAtStation) {
                                 if (object.getName().equals(member.getName())) {
-                                    index= listStation.indexOf(object);
+                                    index = listStation.indexOf(object);
                                     listAtStation.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
                             for (Member object : listUnknown) {
                                 if (object.getName().equals(member.getName())) {
-                                    index= listUnknown.indexOf(object);
+                                    index = listUnknown.indexOf(object);
                                     listUnknown.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
@@ -220,54 +225,106 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         } catch (Exception e) {
                             e.printStackTrace();
                         } finally {
-
-                            if (member.getIsResponding()) {
-                                //Log.d("RESPONDING", member.getRespondingTo());
-                                switch (member.getRespondingTo().toUpperCase()) {
-                                    case "STATION":
-                                        if (sectionAdapter.getSection("Station") == null) {
-                                            sectionAdapter.addSection("Station", stationSection);
-                                        }
-                                        stationSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
-                                    case "SCENE":
-                                        if (sectionAdapter.getSection("Scene") == null) {
-                                            sectionAdapter.addSection("Scene", sceneSection);
-                                        }
-                                        sceneSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
-                                    case "NR":
-                                        if (sectionAdapter.getSection("CR") == null) {
-                                            sectionAdapter.addSection("CR", CRSection);
-                                        }
-                                        CRSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
-                                    case "CAN'T RESPOND":
-                                        if (sectionAdapter.getSection("CR") == null) {
-                                            sectionAdapter.addSection("CR", CRSection);
-                                        }
-                                        CRSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
-                                    case "AT STATION":
-                                        if (sectionAdapter.getSection("At Station") == null) {
-                                            sectionAdapter.addSection("At Station", atStationSection);
-                                        }
-                                        atStationSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
-                                    default:
-                                        if (sectionAdapter.getSection("Unknown") == null) {
-                                            sectionAdapter.addSection("Unknown", unknownSection);
-                                        }
-                                        unknownSection.addRow(member, index);
-                                        sectionAdapter.notifyDataSetChanged();
-                                        break;
+                            /*CRASH FIX, INDEX*/
+                            Log.d("RESPONDING", "onDataChange: " + dataSnapshot.child("respondingAgency").getValue());
+                            if (!dataSnapshot.child("respondingAgency").getValue().toString().isEmpty()) {
+                                if (member.getIsResponding() && member.getRespondingTo() != null && dataSnapshot.child("respondingAgency").getValue().toString().equals(RespondingSystem.getInstance(getActivity()).getCurrentDepartmentKey())) {
+                                    //Log.d("RESPONDING", member.getRespondingTo());
+                                    switch (member.getRespondingTo().toUpperCase()) {
+                                        case "STATION":
+                                            if (sectionAdapter.getSection("Station") == null) {
+                                                sectionAdapter.addSection("Station", stationSection);
+                                            }
+                                            stationSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "SCENE":
+                                            if (sectionAdapter.getSection("Scene") == null) {
+                                                sectionAdapter.addSection("Scene", sceneSection);
+                                            }
+                                            sceneSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "NR":
+                                            if (sectionAdapter.getSection("CR") == null) {
+                                                sectionAdapter.addSection("CR", CRSection);
+                                            }
+                                            CRSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "CAN'T RESPOND":
+                                            if (sectionAdapter.getSection("CR") == null) {
+                                                sectionAdapter.addSection("CR", CRSection);
+                                            }
+                                            CRSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "AT STATION":
+                                            if (sectionAdapter.getSection("At Station") == null) {
+                                                sectionAdapter.addSection("At Station", atStationSection);
+                                            }
+                                            atStationSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        default:
+                                            if (sectionAdapter.getSection("Unknown") == null) {
+                                                sectionAdapter.addSection("Unknown", unknownSection);
+                                            }
+                                            unknownSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                    }
+                                }
+                            } else {
+                                if (member.getIsResponding() && member.getRespondingTo() != null) {
+                                    //Log.d("RESPONDING", member.getRespondingTo());
+                                    switch (member.getRespondingTo().toUpperCase()) {
+                                        case "STATION":
+                                            if (sectionAdapter.getSection("Station") == null) {
+                                                sectionAdapter.addSection("Station", stationSection);
+                                            }
+                                            stationSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "SCENE":
+                                            if (sectionAdapter.getSection("Scene") == null) {
+                                                sectionAdapter.addSection("Scene", sceneSection);
+                                            }
+                                            sceneSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "NR":
+                                            if (sectionAdapter.getSection("CR") == null) {
+                                                sectionAdapter.addSection("CR", CRSection);
+                                            }
+                                            CRSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "CAN'T RESPOND":
+                                            if (sectionAdapter.getSection("CR") == null) {
+                                                sectionAdapter.addSection("CR", CRSection);
+                                            }
+                                            CRSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        case "AT STATION":
+                                            if (sectionAdapter.getSection("At Station") == null) {
+                                                sectionAdapter.addSection("At Station", atStationSection);
+                                            }
+                                            atStationSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                        default:
+                                            if (sectionAdapter.getSection("Unknown") == null) {
+                                                sectionAdapter.addSection("Unknown", unknownSection);
+                                            }
+                                            unknownSection.addRow(member);
+                                            sectionAdapter.notifyDataSetChanged();
+                                            break;
+                                    }
                                 }
                             }
+
                         }
 
                         if (listStation.size() == 0) {
@@ -323,6 +380,17 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        departmentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Loading Finished.
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -347,12 +415,40 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                 });
                 break;
             case R.id.responding_station_layout:
-                setRespondingSelected(0, false);
-                updateRespondingStatus(0);
+                if (mRespondingConfirm) {
+                    Snackbar snackbar = Snackbar.make(mParentLayout, "Respond to Station?", 10000).setAction("RESPOND", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setRespondingSelected(0, false);
+                            updateRespondingStatus(0);
+                        }
+                    }).setActionTextColor(getResources().getColor(R.color.new_accent));
+                    View view = snackbar.getView();
+                    view.setBackgroundColor(getResources().getColor(R.color.snackbar));
+                    ((TextView)view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
+                    snackbar.show();
+                } else {
+                    setRespondingSelected(0, false);
+                    updateRespondingStatus(0);
+                }
                 break;
             case R.id.responding_scene_layout:
-                setRespondingSelected(1, false);
-                updateRespondingStatus(1);
+                if (mRespondingConfirm) {
+                    Snackbar snackbar = Snackbar.make(mParentLayout, "Respond to Scene?", 10000).setAction("RESPOND", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            setRespondingSelected(1, false);
+                            updateRespondingStatus(1);
+                        }
+                    }).setActionTextColor(getResources().getColor(R.color.new_accent));
+                    View view = snackbar.getView();
+                    view.setBackgroundColor(getResources().getColor(R.color.snackbar));
+                    ((TextView)view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
+                    snackbar.show();
+                } else {
+                    setRespondingSelected(1, false);
+                    updateRespondingStatus(1);
+                }
                 break;
             case R.id.responding_cr_layout:
                 setRespondingSelected(2, false);
@@ -495,33 +591,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
     }
 
     private void updateRespondingStatus(int mRespondingSelected) {
-
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        0);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-
+        Intent locationService = new Intent(getActivity(), WLocationService.class);
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getDefault());
         Date date = new Date();
@@ -530,7 +600,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         switch (mRespondingSelected) {
             case 0:
                 //Station
-                Map<String, Object> respondingToStation = new HashMap<String, Object>();
+                /*Map<String, Object> respondingToStation = new HashMap<String, Object>();
                 respondingToStation.put("respondingTo", "Station");
                 respondingToStation.put("isResponding", true);
                 respondingToStation.put("respondingTime", mLastUpdateTime);
@@ -543,10 +613,13 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         mStationPB.setVisibility(View.INVISIBLE);
                     }
                 });
+                if (mIsLocationTrackingEnabled)
+                    getActivity().startService(locationService);*/
+                RespondingSystem.getInstance(getActivity()).respondStation();
                 break;
             case 1:
                 //Scene
-                Map<String, Object> respondingToScene = new HashMap<String, Object>();
+                /*Map<String, Object> respondingToScene = new HashMap<String, Object>();
                 respondingToScene.put("respondingTo", "Scene");
                 respondingToScene.put("isResponding", true);
                 respondingToScene.put("respondingTime", mLastUpdateTime);
@@ -559,10 +632,13 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         mScenePB.setVisibility(View.INVISIBLE);
                     }
                 });
+                if (mIsLocationTrackingEnabled)
+                    getActivity().startService(locationService);*/
+                RespondingSystem.getInstance(getActivity()).respondScene();
                 break;
             case 2:
                 //Can't Respond
-                Map<String, Object> cantRespond = new HashMap<String, Object>();
+                /*Map<String, Object> cantRespond = new HashMap<String, Object>();
                 cantRespond.put("respondingTo", "Can't Respond");
                 cantRespond.put("isResponding", true);
                 cantRespond.put("respondingTime", mLastUpdateTime);
@@ -574,14 +650,15 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         }
                         mCantRespondPB.setVisibility(View.INVISIBLE);
                     }
-                });
+                });*/
+                RespondingSystem.getInstance(getActivity()).respondCant();
                 break;
             case 3:
                 break;
             case 4:
                 break;
             case 5:
-                Map<String, Object> respondingReset = new HashMap<String, Object>();
+                /*Map<String, Object> respondingReset = new HashMap<String, Object>();
                 respondingReset.put("respondingTo", "");
                 respondingReset.put("isResponding", false);
                 respondingReset.put("respondingTime", "");
@@ -596,6 +673,9 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         mIsResponding = false;
                     }
                 });
+                if (mIsLocationTrackingEnabled)
+                    getActivity().stopService(locationService);*/
+                RespondingSystem.getInstance(getActivity()).clearSelf();
                 break;
         }
     }
@@ -611,12 +691,6 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                 if (member.getIsResponding() && member.getRespondingTo() != null) {
                     updateButtons(true, member.getRespondingTo());
                     Log.d("Responding", member.getRespondingTo());
-                    if (member.getRespondingTo() != "Can't Respond" || member.getRespondingTo() != "NR" && mIsLocationTrackingEnabled) {
-                        mIsResponding = true;
-                        if (mGoogleApiClient.isConnected()) {
-                            startLocationUpdates();
-                        }
-                    }
                 } else {
                     updateButtons(false);
                 }
@@ -626,9 +700,6 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-
-                // ...
             }
         };
         userReference.addValueEventListener(postListener);
@@ -662,138 +733,6 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         }
     }
 
-
-    /* LOCATION STUFF */
-
-    protected void startLocationUpdates() {
-        int permissionCheck = ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        if (mLocationRequest != null) {
-            Log.d("WHOER-LOC", "Location already being tracked, no need to start more.");
-            return;
-            //Already requesting location, don't start again.
-        }
-
-        String mLocationPriority = sharedPreferences.getString("pref_map_response_accuracy", "PRIORITY_HIGH_ACCURACY");
-        String mLocationInterval = sharedPreferences.getString("pref_map_response_frequency", "10000");
-
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(Integer.parseInt(mLocationInterval));
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setSmallestDisplacement(10f);
-        switch (mLocationPriority) {
-            case "PRIORITY_HIGH_ACCURACY":
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                break;
-            case "PRIORITY_NO_POWER":
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
-                break;
-            case "PRIORITY_LOW_POWER":
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-                break;
-            case "PRIORITY_BALANCED_POWER_ACCURACY":
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                break;
-            default:
-                mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                break;
-        }
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-        Log.d("WHOER-LOC", "LOCATION TRACKING STARTED");
-    }
-
-    private void setUpGoogleApi() {
-        // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-    }
-
-    public void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-    }
-
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        if (mIsResponding && mIsLocationTrackingEnabled) {
-            //startLocationUpdates();
-        }
-        super.onResume();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.d("WHOER-LOC", "CONNECTED");
-        if (mIsLocationTrackingEnabled && mIsResponding) {
-            //startLocationUpdates();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 0: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if (!mIsLocationTrackingEnabled) {
-            return;
-        }
-        //Location Enabled, send to Firebase!!
-        Log.d("WHOER-LOC", "Location Updated" + location);
-        Log.d("WHOER-LOC", "" + mCurrentMember);
-
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("/location/currentLat", location.getLatitude());
-        updates.put("/location/currentLon", location.getLongitude());
-
-        userReference.updateChildren(updates);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e("WHOER-LOC", connectionResult.getErrorMessage());
-    }
-
-    /* END LOCATION STUFF */
-
     class MySection extends StatelessSection {
 
         String title;
@@ -820,6 +759,8 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             return new ItemViewHolder(view);
         }
 
+
+
         @Override
         public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
             ItemViewHolder itemHolder = (ItemViewHolder) holder;
@@ -827,8 +768,11 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
 
             ShapeDrawable shapeDrawable = new ShapeDrawable();
             shapeDrawable.setShape(new OvalShape());
-            Log.d("COLOR", member.getPositionColor());
-            shapeDrawable.getPaint().setColor(Color.parseColor("#" + member.getPositionColor()));
+            if (member.getPositionColor() != null) {
+                shapeDrawable.getPaint().setColor(Color.parseColor("#" + member.getPositionColor()));
+            } else {
+                shapeDrawable.getPaint().setColor(getResources().getColor(R.color.md_blue_500));
+            }
             itemHolder.posImage.setBackground(shapeDrawable);
 
             itemHolder.tvAbbrv.setText(member.getPositionAbbrv());
@@ -839,14 +783,14 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             itemHolder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (Long.valueOf(member.getPhoneNum()) != null) {
                         String menu[] = {"Call", "Text"};
                         new MaterialDialog.Builder(context)
-                                .title("Complete Incident")
+                                .title(member.getName())
                                 .items(menu)
                                 .itemsGravity(GravityEnum.CENTER)
-                                .itemsColor(getResources().getColor(R.color.bottom_sheet_title))
+                                .titleColorRes(R.color.text_responding_name)
+                                .backgroundColorRes(R.color.bottom_sheet_background)
                                 .itemsCallback(new MaterialDialog.ListCallback() {
                                     @Override
                                     public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
@@ -902,8 +846,8 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             headerHolder.tvTitle.setText(title);
         }
 
-        public void addRow (Member item, Integer index) {
-            this.list.add(index, item);
+        public void addRow(Member item) {
+            this.list.add(item);
         }
     }
 

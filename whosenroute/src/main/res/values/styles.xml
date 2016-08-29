@@ -4,23 +4,56 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!--<item name="md_dark_theme">@bool/md_dark_theme</item>-->
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_red_500</item>
-        <item name="colorPrimaryDark">@color/md_red_700</item>
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
         <item name="colorAccent">@color/md_blue_grey_500</item>
     </style>
 
+    <style name="NewMarkerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="md_dark_theme">@bool/md_dark_theme</item>-->
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+    </style>
+
+    <style name="NewMemberTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!--<item name="md_dark_theme">@bool/md_dark_theme</item>-->
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="colorAccent">@color/fab_accent</item>
+
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+    </style>
+
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/md_red_500</item>
-        <item name="colorPrimaryDark">@color/md_red_700</item>
+        <item name="colorPrimary">@color/newRed</item>
+        <item name="colorPrimaryDark">@color/newRedDark</item>
         <item name="colorAccent">@color/md_blue_grey_500</item>
 
         <item name="colorButtonNormal">@color/md_red_500</item>
         <item name="colorControlHighlight">@color/md_red_700</item>
     </style>
 
-    <style name="NavDrawerTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_red_500</item>
+    <style name="SignupTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#EF9D51</item>
         <item name="colorPrimaryDark">@color/md_red_700</item>
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+    </style>
+
+    <style name="NavDrawerTheme" parent="AppTheme">
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
         <item name="colorAccent">@color/md_blue_grey_500</item>
 
         <item name="material_drawer_background">@color/material_drawer_background</item>
@@ -30,7 +63,6 @@
         <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
         <item name="material_drawer_divider">@color/material_drawer_divider</item>
         <item name="material_drawer_selected">@color/material_drawer_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
 
         <item name="md_dark_theme">true</item>
@@ -41,15 +73,66 @@
         <item name="colorControlHighlight">@color/md_red_700</item>
     </style>
 
-    <style name="SettingsTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="SettingsTheme" parent="@style/PreferenceFixTheme.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/md_red_500</item>
-        <item name="colorPrimaryDark">@color/md_red_700</item>
-        <item name="colorAccent">@color/md_red_500</item>
+        <item name="colorPrimary">@color/newRed</item>
+        <item name="colorPrimaryDark">@color/newRedDark</item>
+        <item name="colorAccent">@color/newRed</item>
+
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+        <item name="android:windowBackground">@color/darkBlue</item>
     </style>
 
     <style name="MapMarkerDark" parent="TextAppearance.AppCompat">
         <item name="android:textColor">#FFFFFF</item>
-    </style>s
+    </style>
+
+    <style name="AlertDialogTheme">
+        <item name="switchStyle">@style/AlertDialogSwitch</item>
+        <item name="android:editTextStyle">@style/Text</item>
+    </style>
+    <style name="AlertDialogSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorAccent">@color/md_teal_A400</item>
+    </style>
+    <style name="Text" parent="Widget.AppCompat.EditText">
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+    </style>
+
+    <style name="ToolbarTitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="ToolbarSubtitleAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="WhiteButton" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+    </style>
+
+    <style name="DepartmentListTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!--<item name="md_dark_theme">@bool/md_dark_theme</item>-->
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="colorAccent">@color/new_accent</item>
+
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+    </style>
+
+    <style name="DepartmentAddTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!--<item name="md_dark_theme">@bool/md_dark_theme</item>-->
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/toolbar_background</item>
+        <item name="colorPrimaryDark">@color/statusbar_background</item>
+        <item name="colorAccent">@color/new_accent</item>
+
+        <item name="colorButtonNormal">#FFFFFF</item>
+        <item name="colorControlHighlight">#DEDEDE</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
 </resources>

@@ -3,7 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        app:elevation="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/home_connection"
+            android:orientation="horizontal"
+            android:background="@color/statusbar_background"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/disconnected"/>
+
+            <TextView
+                android:text="Poor/No Internet Connection."
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:layout_marginLeft="16dp"
+                android:textStyle="normal|bold"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/toolbar_background"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_scrollFlags="enterAlways"
+            app:elevation="0dp"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:subtitleTextAppearance="@style/ToolbarSubtitleAppearance"
+            app:titleTextAppearance="@style/ToolbarTitleAppearance"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -11,7 +59,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar"
         android:clipToPadding="false"
-        android:paddingBottom="56dp"
+        android:paddingBottom="0dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout
@@ -20,7 +68,7 @@
         android:layout_height="wrap_content"
         android:background="@color/bottom_sheet_background"
         android:clipToPadding="true"
-        android:elevation="4dp"
+        app:elevation="4dp"
         android:visibility="gone"
         android:orientation="vertical"
         app:behavior_peekHeight="56dp"
@@ -44,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-                android:text="Incident Not Found"
+                android:text="Loading..."
                 android:textColor="@color/bottom_sheet_title"
                 android:textSize="17sp"
                 android:textStyle="normal|bold" />
@@ -58,7 +106,7 @@
             android:paddingBottom="16sp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="Unknown Incident"
+            android:text="Loading Incident..."
             android:textSize="16sp" />
 
         <LinearLayout
@@ -94,42 +142,15 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/map_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="14dp"
-        android:visibility="gone"
-        android:src="@drawable/ic_map_white_24dp"
-        app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="top|end" />
-
-    <com.miguelcatalan.materialsearchview.MaterialSearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search"
-        android:elevation="4dp"
-        android:visibility="visible" />
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#50000000"
-        app:elevation="0dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:elevation="0dp"
-            app:layout_scrollFlags="enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
-    </android.support.design.widget.AppBarLayout>
-
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/map_fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="14dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:src="@drawable/ic_map_white_24dp"-->
+        <!--app:backgroundTint="@color/fab_accent"-->
+        <!--app:layout_anchor="@id/bottom_sheet"-->
+        <!--app:layout_anchorGravity="top|end" />-->
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,4 +47,31 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="72dp"
         android:id="@+id/apparatus_recyclerview" />
-</LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/apparatus_main_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right|end"
+        fab:layout_behavior="com.fireapps.firedepartmentmanager.FloatingActionButtonBehavior"
+        fab:menu_colorNormal="@color/fab_accent"
+        fab:menu_colorPressed="@color/fab_accent"
+        app:srcCompat="@drawable/ic_add_white_24dp"
+        fab:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/apparatus_main_fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp_compat"
+            fab:fab_colorNormal="#D50000"
+            fab:fab_colorPressed="#D50000"
+            fab:fab_colorRipple="#b71c1c"
+            fab:fab_label="Add Apparatus"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+</FrameLayout>

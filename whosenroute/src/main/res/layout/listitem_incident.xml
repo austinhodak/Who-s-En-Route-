@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/LI_responding_name"
                 android:gravity="center_vertical"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/text_responding_name" />
 
             <TextView
@@ -65,10 +65,7 @@
                 android:maxLines="1"
                 android:ellipsize="marquee"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:freezesText="true"
                 android:scrollHorizontally="true"
-                android:focusableInTouchMode="true"
-                android:focusable="true"
                 android:gravity="center_vertical"
                 android:textSize="14sp" />
         </LinearLayout>

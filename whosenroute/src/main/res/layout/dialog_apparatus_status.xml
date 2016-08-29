@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/bottom_sheet_background"
+    android:theme="@style/AlertDialogTheme">
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Alert"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>-->
+    <RelativeLayout
+        android:id="@+id/dialog_alert_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/statusbar_background"
+        android:elevation="2dp">
+
+        <TextView
+            android:id="@+id/dialog_alert_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:gravity="center_horizontal"
+            android:text="Update Status"
+            android:textColor="#FFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background">
+
+        <Switch
+            android:id="@+id/apparatus_status_inservice"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="In Service"
+            android:textSize="16sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/text_responding_name"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DETAILS"
+                android:textStyle="bold"
+                android:textColor="@color/new_accent"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/apparatus_status_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:hint="Status Details"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:textSize="15sp"
+                app:met_baseColor="@color/bottom_sheet_title"
+                app:met_floatingLabel="normal"
+                app:met_primaryColor="@color/fab_accent" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

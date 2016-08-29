@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="vertical"
+            android:layout_toLeftOf="@+id/LI_responding_time"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:text="Austin Hodak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LI_member_name"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:textColor="@color/text_responding_name" />
+
+            <TextView
+                android:text="Firefighter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LI_member_position"
+                android:maxLines="1"
+                android:gravity="center_vertical"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

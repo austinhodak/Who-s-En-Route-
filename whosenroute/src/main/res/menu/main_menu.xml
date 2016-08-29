@@ -3,10 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_quick_respond"
+        android:orderInCategory="10"
+        android:title="Respond.."
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/firealarmbox"/>
+
+    <item
+        android:visible="false"
+        app:showAsAction="always"
+        android:id="@+id/menu_stream_pause"
+        android:icon="@drawable/ic_pause_circle_outline_black_24dp"
+        android:title="Pause" />
+
+    <item
+        android:visible="false"
+        app:showAsAction="always"
+        android:id="@+id/menu_stream_play"
+        android:icon="@drawable/radio_white"
+        android:title="Play" />
+
+    <item
         android:visible="false"
         app:showAsAction="always"
         android:id="@+id/menu_incident_main"
         android:icon="@drawable/firealarm_menu"
         android:title="Incident" />
+
+    <item
+        android:visible="true"
+        android:id="@+id/menu_location_get"
+        android:title="Start Location Updates" />
+
+    <item
+        android:visible="true"
+        android:id="@+id/menu_location_stop"
+        android:title="Stop Location Updates" />
+
+    <item
+        android:visible="true"
+        android:id="@+id/menu_responding_clear"
+        android:title="Clear Responding List" />
 
 </menu>

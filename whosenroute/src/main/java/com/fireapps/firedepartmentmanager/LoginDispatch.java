@@ -3,15 +3,12 @@ package com.fireapps.firedepartmentmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.FirebaseDatabase;
-
-/**
- * Created by austinhodak on 6/14/16.
- */
 
 public class LoginDispatch extends Activity {
 
@@ -22,6 +19,7 @@ public class LoginDispatch extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         setResult(resultCode);
+
         if (requestCode == LOGIN_REQUEST && resultCode == RESULT_OK) {
             runDispatch();
         } else {
@@ -40,13 +38,16 @@ public class LoginDispatch extends Activity {
         runDispatch();
     }
 
+    //TODO: FIX THIS! >K<
     private void runDispatch() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            Log.d("DISPATCH", "runDispatch: ");
             // User is signed in
             Intent i = new Intent(this, NavDrawerActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivityForResult(i, TARGET_REQUEST);
+            finish();
         } else {
             // No user is signed in
             Intent i = new Intent(this, LoginActivity.class);

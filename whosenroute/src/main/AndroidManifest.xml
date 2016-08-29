@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <!-- Fix for API 16 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <permission
         android:name="your.package.name.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -17,11 +20,14 @@
     <application
         android:name=".Application"
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginDispatch">
+        <activity
+            android:name=".LoginDispatch"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,8 +47,7 @@
             android:label="Dialog Test"
             android:launchMode="singleInstance"
             android:taskAffinity=""
-            android:theme="@style/NewIncidentPopup">
-        </activity>
+            android:theme="@style/NewIncidentPopup" />
 
         <service android:name=".FirebaseInstanceIDService">
             <intent-filter>
@@ -64,16 +69,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fireapps.firedepartmentmanager.NavDrawerActivity" />
         </activity>
-        <activity android:name=".IncidentDetailActivity"
+        <activity
+            android:name=".IncidentDetailActivity"
             android:label="Incident Details"
             android:parentActivityName=".NavDrawerActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fireapps.firedepartmentmanager.NavDrawerActivity" />
         </activity>
-        <activity android:name=".ApparatusDetailActivity"
+        <activity
+            android:name=".ApparatusDetailActivity"
             android:label="Apparatus Detail"
-            android:parentActivityName=".NavDrawerActivity">
+            android:parentActivityName=".NavDrawerActivity"
+            android:theme="@style/DepartmentListTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fireapps.firedepartmentmanager.NavDrawerActivity" />
@@ -85,7 +93,48 @@
 
         <service
             android:name=".GeocodeAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
+        <service android:name=".WLocationService" />
+        <service android:name=".WLocationService$GeofenceTransitionsIntentService" />
+        <service android:name=".AudioFeedService" />
+
+        <receiver android:name=".WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.fireapps.firedepartmentmanager.WIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/responding_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/SignupTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".MapNewMarker"
+            android:theme="@style/NewMarkerTheme" />
+        <activity
+            android:name=".MapEditMarker"
+            android:theme="@style/NewMarkerTheme" />
+        <activity
+            android:name=".LoginChooser"
+            android:theme="@style/SignupTheme" />
+        <activity
+            android:name=".SettingsNestedActivity"
+            android:theme="@style/SettingsTheme" />
+        <activity
+            android:name=".FirstSignupActivity"
+            android:theme="@style/Theme.Intro" />
+        <activity
+            android:name=".MemberAdd"
+            android:theme="@style/NewMemberTheme" />
+        <activity
+            android:name=".DepartmentList"
+            android:theme="@style/DepartmentListTheme" />
+        <activity android:name=".DepartmentAdd" android:theme="@style/DepartmentAddTheme"></activity>
     </application>
 
 </manifest>

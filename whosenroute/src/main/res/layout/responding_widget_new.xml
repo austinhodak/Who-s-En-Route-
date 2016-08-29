@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/widget">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/widget_bg"
+            android:id="@+id/rl">
+
+            <RelativeLayout android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/rl2">
+
+                <ImageView
+                    android:src="@drawable/ic_refresh_black_24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/widget_refresh"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="16dp" />
+
+                <TextView
+                    android:text="Who's En Route?"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView43"
+                    android:textColor="#FFF"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:text="0 Responding"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="#FFF"
+                    android:id="@+id/widget_responding_count"
+                    android:textSize="14sp"
+                    android:layout_below="@+id/textView43" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12:34"
+                    android:textColor="#FFFFFF"
+                    android:layout_toLeftOf="@+id/widget_refresh"
+                    android:layout_alignTop="@id/widget_refresh"
+                    android:layout_alignBottom="@id/widget_refresh"
+                    android:gravity="center_vertical"
+                    android:layout_marginRight="12dp"
+                    android:id="@+id/widget_time" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/widget_bg_bottom"
+                android:paddingRight="16dp"
+                android:layout_below="@+id/rl2"
+                android:layout_marginTop="24dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:text="Station"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/widget_station"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="#FFF"
+                    android:textColorLink="#FFF"
+                    android:textSize="15sp"
+                    android:layout_marginRight="4dp" />
+
+                <TextView
+                    android:visibility="gone"
+                    android:text="Can't Respond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/widget_cr"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="#FFF"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:text="Scene"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/widget_scene"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="#FFF"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="4dp" />
+
+                <ImageView
+                    android:id="@+id/widget_cancel"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/responding_cancel"
+                    android:layout_marginLeft="8dp" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+</RelativeLayout>

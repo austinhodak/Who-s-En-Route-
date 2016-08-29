@@ -6,7 +6,8 @@
     <string name="drawer_item_apparatus">Apparatus</string>
     <string name="drawer_item_map">Map</string>
     <string name="title_activity_settings">Settings</string>
-    <string-array name="map_layers" >
+    <string name="color_palette">Color Palette</string>
+    <string-array name="map_layers">
         <item>None</item>
         <item>Normal</item>
         <item>Satellite</item>
@@ -18,7 +19,7 @@
         <item>Popup Dialog</item>
     </string-array>
 
-    <string-array name="location_accuracy" >
+    <string-array name="location_accuracy">
         <item>Lowest Power Usage (Very Inaccurate)</item>
         <item>Low Power (City Level)</item>
         <item>Balanced (City Block)</item>
@@ -45,4 +46,44 @@
         <item>30000</item>
         <item>60000</item>
     </string-array>
+
+    <string-array name="location_timeout">
+        <item>1 Minute</item>
+        <item>5 Minutes</item>
+        <item>10 Minutes</item>
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>1 Hour</item>
+        <item>Until Stopped</item>
+    </string-array>
+    <string-array name="location_timeout_values">
+        <item>60000</item>
+        <item>300000</item>
+        <item>600000</item>
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>0</item>
+    </string-array>
+
+    <array name="mdcolor_500">
+        <item name="red_500" type="color">#e51c23</item>
+        <item name="pink_500" type="color">#e91e63</item>
+        <item name="purple_500" type="color">#9c27b0</item>
+        <item name="deep_purple_500" type="color">#673ab7</item>
+        <item name="indigo_500" type="color">#3f51b5</item>
+        <item name="blue_500" type="color">#5677fc</item>
+        <item name="light_blue_500" type="color">#03a9f4</item>
+        <item name="cyan_500" type="color">#00bcd4</item>
+        <item name="teal_500" type="color">#009688</item>
+        <item name="green_500" type="color">#259b24</item>
+        <item name="light_green_500" type="color">#8bc34a</item>
+        <item name="lime_500" type="color">#cddc39</item>
+        <item name="yellow_500" type="color">#ffeb3b</item>
+        <item name="orange_500" type="color">#ff9800</item>
+        <item name="deep_orange_500" type="color">#ff5722</item>
+        <item name="brown_500" type="color">#795548</item>
+        <item name="grey_500" type="color">#9e9e9e</item>
+        <item name="blue_grey_500" type="color">#607d8b</item>
+    </array>
 </resources>

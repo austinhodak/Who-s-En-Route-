@@ -1,22 +1,25 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 repositories {
     maven { url 'http://clojars.org/repo' }
+    maven { url 'http://dl.bintray.com/glomadrian/maven' }
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion '24.0.2'
 
     defaultConfig {
         applicationId "com.fireapps.firedepartmentmanager"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1032
-        versionName "0.3.2"
+        versionCode 1040
+        versionName "0.4.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -24,53 +27,92 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    applicationVariants.all { variant ->
+        variant.resValue "string", "versionName", variant.versionName
+    }
+    productFlavors {
+        dev {
+            minSdkVersion 21
+        }
+        prod {
+            minSdkVersion 16
+        }
+    }
 }
-
 //noinspection GroovyAssignabilityCheck
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    //Navigation
-    compile('com.mikepenz:materialdrawer:5.3.0@aar') {
+    compile('com.mikepenz:materialdrawer:5.6.0@aar') {
         transitive = true
     }
-    //Firebase
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    //Images
-    compile 'com.android.support:cardview-v7:24.0.0'
-    //Android
-    compile 'com.google.firebase:firebase-core:9.0.2'
-    compile 'com.google.firebase:firebase-database:9.0.2'
-    compile 'com.google.firebase:firebase-crash:9.0.2'
-    compile 'com.google.firebase:firebase-auth:9.0.2'
-    compile 'com.google.firebase:firebase-messaging:9.0.2'
+    compile('com.mikepenz:fastadapter:1.8.0@aar') {
+        transitive = true
+    }
+
+    compile 'com.takisoft.fix:preference-v7:24.1.0.1'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.github.glomadrian:CodeInput:1.1@aar'
+    compile 'com.github.fiskurgit:ChipCloud:2.0.3'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
+    compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.google.firebase:firebase-crash:9.4.0'
+    compile 'com.google.firebase:firebase-auth:9.4.0'
+    compile 'com.google.firebase:firebase-messaging:9.4.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:support-v4:24.2.0'
     compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
     compile 'ayar.oktay.library:advancedtextview:0.4.5'
     compile 'com.github.AndroidDeveloperLB:AutoFitTextView:2'
-    compile 'com.android.support:design:24.0.0'
-    compile 'com.github.javiersantos:AppUpdater:2.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
-    compile 'com.afollestad.material-dialogs:core:0.8.6.0'
-    compile 'com.android.support:support-vector-drawable:24.0.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.github.javiersantos:AppUpdater:2.4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
+    compile 'com.afollestad.material-dialogs:commons:0.8.6.1'
+    compile 'com.android.support:support-vector-drawable:24.2.0'
+    compile 'com.google.android.gms:play-services:9.4.0'
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4.3'
+    compile 'com.github.clans:fab:1.6.4'
+    compile 'com.github.porokoro.paperboy:paperboy:3.0.0'
+    compile 'com.mukesh:permissions:1.0.3'
+    compile 'com.github.iammert:RadioPlayerService:efe3b5420b'
+    compile 'com.github.badoualy:stepper-indicator:1.0.2'
+    compile 'com.github.nisrulz:qreader:1.0.6'
+    compile 'com.thebluealliance:spectrum:0.6.0'
+    compile 'com.github.lawloretienne:discreteslider:0.0.6'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
+    compile 'com.rengwuxian.materialedittext:library:2.1.4'
+    compile 'com.androidmapsextensions:android-maps-extensions:2.2.1'
+    compile 'com.zplesac:connectionbuddy:1.1.2@aar'
+    compile 'net.xpece.android:support-preference:1.0.2'
+    compile 'com.heinrichreimersoftware:material-intro:1.5.7'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support:support-annotations:24.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.google.android.gms:play-services-location:9.0.2'
+    androidTestCompile 'com.android.support:support-annotations:24.2.0'
 
-    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+}
 
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0]?.processResources?.manifestFile
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
 
-    compile('com.mikepenz:fastadapter:1.5.5@aar') {
-        transitive = true
+        // you should set your package name here if you are using different application IDs
+        // resourcePackageName "your.package.name"
+
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
     }
-    compile 'com.github.clans:fab:1.6.4'
-
-    compile 'com.github.porokoro.paperboy:paperboy:3.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

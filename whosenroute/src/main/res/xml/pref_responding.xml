@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="pref_responding_confirm_status"
+        android:maxLines="2"
+        android:summary="Confirm before marking you En Route?"
+        android:title="Confirm Responding Status?" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="pref_responding_shortcut_menu"
+        android:title="Enable Respond Shortcut in Menu." />
+
+</PreferenceScreen>

@@ -1,8 +1,8 @@
 package com.fireapps.firedepartmentmanager;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,12 +23,10 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "LoginActivity";
-
+    ProgressBar mProgressBar;
     private EditText mEmailField;
     private EditText mPasswordField;
     private Button mButton;
-    ProgressBar mProgressBar;
-
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
@@ -52,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             mButton.setOnClickListener(this);
         }
 
-        ImageView bg = (ImageView)findViewById(R.id.login_bg);
+        ImageView bg = (ImageView) findViewById(R.id.login_bg);
         if (bg != null) {
             bg.setColorFilter(Color.argb(210, 244, 67, 54));
             Glide.with(this).load(R.drawable.social).centerCrop().into(bg);
@@ -70,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    //RespondingSystem.getInstance(LoginActivity.this).loadInitialData();
                     setResult(RESULT_OK);
                     finish();
                 } else {

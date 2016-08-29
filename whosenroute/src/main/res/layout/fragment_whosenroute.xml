@@ -5,15 +5,17 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 
     <LinearLayout
+        android:visibility="visible"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="@color/primary"
+        android:background="@color/toolbar_background"
         android:elevation="4dp"
         android:gravity="center_vertical"
         android:paddingRight="16dp"
@@ -24,28 +26,28 @@
             android:id="@+id/responding_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
             android:src="@drawable/ic_arrow_drop_down_white_24dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginLeft="16dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp" />
+            tools:layout_editor_absoluteY="24dp" />
 
         <RelativeLayout
+            android:id="@+id/responding_station_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
             android:gravity="center_vertical"
-            android:id="@+id/responding_station_layout">
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
 
             <ProgressBar
+                android:id="@+id/responding_station_pb"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:id="@+id/responding_station_pb"
                 android:layout_toLeftOf="@+id/responding_station"
                 android:visibility="gone" />
 
@@ -53,92 +55,170 @@
                 android:id="@+id/responding_station"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="Station"
                 android:textColor="#FFF"
                 android:textColorLink="#FFF"
-                android:textSize="15sp"
-                android:layout_centerHorizontal="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginLeft="4dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/responding_cr_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
             android:gravity="center_vertical"
-            android:id="@+id/responding_cr_layout">
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
 
             <ProgressBar
+                android:id="@+id/responding_cr_pb"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_toLeftOf="@+id/responding_cantrespond"
-                android:visibility="gone"
-                android:id="@+id/responding_cr_pb" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/responding_cantrespond"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="Can't Respond"
                 android:textColor="#FFF"
-                android:textSize="15sp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginLeft="4dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:gravity="center_vertical"
-        android:id="@+id/responding_scene_layout">
+        <RelativeLayout
+            android:id="@+id/responding_scene_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
 
             <ProgressBar
+                android:id="@+id/responding_scene_pb"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_toLeftOf="@+id/responding_scene"
-                android:visibility="gone"
-                android:id="@+id/responding_scene_pb" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/responding_scene"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
+                android:layout_marginLeft="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:text="Scene"
                 android:textColor="#FFF"
-                android:textSize="15sp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:layout_marginLeft="4dp" />
+                android:textSize="15sp" />
 
         </RelativeLayout>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/empty_layout">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl2"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/widget_bg_bottom"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingBottom="20dp"
+            android:paddingTop="20dp"
+            android:src="@drawable/ic_arrow_drop_down_white_24dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="24dp"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:id="@+id/widget_station"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Station"
+            android:textColor="#FFF"
+            android:textColorLink="#FFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/widget_cr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Can't Respond"
+            android:textColor="#FFF"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/widget_scene"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Scene"
+            android:textColor="#FFF"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/widget_cancel"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/responding_cancel" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:src="@drawable/firealarm"
-                android:layout_marginBottom="8dp" />
+                android:layout_height="72dp">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/alarm_arm" />
+
+                <ImageView
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/alarm_base" />
+
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -151,11 +231,11 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/responding_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         tools:layout_constraintTop_creator="0"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="72dp"
-        android:id="@+id/responding_recyclerview" />
+        tools:layout_editor_absoluteY="72dp" />
 </LinearLayout>

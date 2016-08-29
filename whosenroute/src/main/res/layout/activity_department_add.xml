@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_department_add"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A1722"
+    tools:context="com.fireapps.firedepartmentmanager.DepartmentAdd">
+
+    <ImageView
+        android:id="@+id/department_add_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:paddingTop="24dp"
+        android:visibility="gone"
+        android:id="@+id/department_add_header_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icon"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:text="Who's En Route? \nQR Code"
+            android:textColor="#FFF"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            android:textStyle="normal|bold" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help"
+            android:textColor="#FFF"
+            android:backgroundTint="@color/md_red_500" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/department_add_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add With..."
+            android:layout_marginBottom="4dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/department_button_qr"
+            android:backgroundTint="@color/md_blue_800"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="QR Code"
+            android:textColor="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/department_button_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pin Code"
+            android:textColor="@color/newRed"/>
+
+    </LinearLayout>
+
+    <SurfaceView
+        android:layout_centerInParent="true"
+        android:id="@+id/department_add_qr"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/signuptwo_deptinfo"
+        android:theme="@style/SignupTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="8dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="24dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Department Name"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="16dp" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Warren County Dispatch"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="@color/primary"
+                    android:layout_marginTop="16dp" />
+
+                <TextView
+                    android:id="@+id/signuptwo_dept_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Warren County Dispatch"
+                    android:textColor="#000000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp">
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/signuptwo_deptinfo_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No"
+                    android:textColor="@color/primary"
+                    android:layout_weight="1"/>
+
+                <Button
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/signuptwo_deptinfo_yes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Yes"
+                    android:textColor="@color/primary"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:id="@+id/department_add_header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/department_add_icon"
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="96dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Who's En Route? \nAdd Department"
+            android:textColor="#FFF"
+            android:textSize="22sp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/department_add_icon"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -9,7 +9,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  * Created by austinhodak on 6/17/16.
  */
 
-public class FirebaseInstanceIDService  extends FirebaseInstanceIdService {
+public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private static final String TAG = "MyFirebaseIIDService";
 
@@ -32,7 +32,7 @@ public class FirebaseInstanceIDService  extends FirebaseInstanceIdService {
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *

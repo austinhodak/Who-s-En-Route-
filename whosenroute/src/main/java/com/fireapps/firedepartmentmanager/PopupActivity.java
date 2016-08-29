@@ -5,13 +5,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,25 +35,38 @@ import java.util.TimeZone;
  */
 
 public class PopupActivity extends Activity implements View.OnClickListener {
-    private SharedPreferences sharedPreferences;
-
     Button mSceneButton, mStationButton, mCRButton, mDismissButton, mOpenButton;
     TextView mTitleTv, mDescTv;
+    Context context;
+    ProgressBar progressBar;
+    private SharedPreferences sharedPreferences;
     private DatabaseReference userReference;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser firebaseUser;
-    Context context;
-    ProgressBar progressBar;
+    private String department;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean incidentTurnOnScreen = sharedPreferences.getBoolean(SettingsActivity.SettingsActivityFragment.KEY_INCIDENT_NOTIFY_SCREENON, true);
+
+        if (extras != null) {
+            if (extras.containsKey("department")) {
+                department = extras.getString("department");
+            }
+        }
+        boolean incidentTurnOnScreen = true;
+        if (department != null) {
+            incidentTurnOnScreen = sharedPreferences.getBoolean(department + "_incidentScreenOn", true);
+        }
+
         if (incidentTurnOnScreen) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         }
+
+
         context = this;
         setContentView(R.layout.popup_new_incident);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -84,7 +94,7 @@ public class PopupActivity extends Activity implements View.OnClickListener {
         mTitleTv = (TextView) findViewById(R.id.popup_title);
         mDescTv = (TextView) findViewById(R.id.popup_desc);
 
-        Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
             if (extras.containsKey("incidentTitle")) {
                 String title = extras.getString("incidentTitle");
@@ -93,6 +103,9 @@ public class PopupActivity extends Activity implements View.OnClickListener {
             if (extras.containsKey("incidentDesc")) {
                 String desc = extras.getString("incidentDesc");
                 mDescTv.setText(desc);
+            }
+            if (extras.containsKey("department")) {
+                department = extras.getString("department");
             }
         }
     }
@@ -119,7 +132,7 @@ public class PopupActivity extends Activity implements View.OnClickListener {
                 updateRespondingStatus(2);
                 break;
         }
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
     }
 

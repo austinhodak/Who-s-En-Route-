@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
@@ -9,10 +9,145 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        android:id="@+id/map_fragment" />
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/map_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/new_marker_overlay"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/location_define"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/new_marker_coords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_marker_overlay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/map_overlay"
+        android:paddingBottom="2dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="2dp"
+        android:text="Lat/Lng"
+        android:textColor="#8A000000"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/map_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        fab:menu_colorNormal="#FFFFFF"
+        fab:menu_colorPressed="#FFFFFF"
+        fab:menu_colorRipple="#EEEEEE"
+        fab:menu_fab_size="normal"
+        fab:menu_icon="@drawable/ic_add_red_compat"
+        fab:menu_labels_position="left"
+        fab:menu_openDirection="up">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/map_edit_marker_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_location_compat"
+            fab:fab_colorNormal="@color/md_blue_500"
+            fab:fab_colorPressed="@color/md_blue_500"
+            fab:fab_colorRipple="@color/md_blue_700"
+            fab:fab_label="Edit Marker"
+            fab:fab_size="mini" />
+
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/map_add_marker_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_location_compat"
+            fab:fab_colorNormal="@color/md_red_500"
+            fab:fab_colorPressed="@color/md_red_500"
+            fab:fab_colorRipple="@color/md_red_700"
+            fab:fab_label="New Marker"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+    <LinearLayout
+        android:id="@+id/map_add_marker_ll1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:orientation="horizontal">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:visibility="gone"
+            android:id="@+id/map_add_marker_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_black_compat"
+            fab:fab_colorNormal="#FFFFFF"
+            fab:fab_colorPressed="#FFFFFF"
+            fab:fab_colorRipple="#EEEEEE"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:visibility="gone"
+            android:id="@+id/map_add_marker_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_24dp_compat"
+            fab:fab_colorNormal="@color/md_red_500"
+            fab:fab_colorPressed="@color/md_red_500"
+            fab:fab_colorRipple="@color/md_red_700"
+            fab:fab_size="mini" />
+
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:visibility="invisible"
+        android:id="@+id/map_search_layout"
+        android:elevation="3dp"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/chip_loc"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp">
+        
+        <EditText
+            android:lines="1"
+            android:maxLines="1"
+            android:id="@+id/map_search_box"
+            android:imeOptions="actionSearch"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:hint="Search..."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:textColorHint="#757575"
+            android:inputType="text" />
+        
+    </RelativeLayout>
+
+</RelativeLayout>

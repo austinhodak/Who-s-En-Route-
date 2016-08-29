@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:chipcloud="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AlertDialogTheme"
+    android:background="@color/bottom_sheet_background"
+    android:gravity="center_horizontal">
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Alert"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbar_background"
+        android:elevation="2dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Map Layers"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/dialog_maplayers_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ms_background_color="@color/bottom_sheet_background"
+            app:ms_dropdown_height="200dp"
+            android:layout_marginTop="16dp" />
+
+        <com.jaredrummler.materialspinner.MaterialSpinner
+            android:id="@+id/dialog_maplayers_markers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ms_background_color="@color/bottom_sheet_background"
+            app:ms_dropdown_height="150dp"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

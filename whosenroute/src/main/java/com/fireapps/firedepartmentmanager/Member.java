@@ -1,11 +1,6 @@
 package com.fireapps.firedepartmentmanager;
 
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by austinhodak on 6/15/16.

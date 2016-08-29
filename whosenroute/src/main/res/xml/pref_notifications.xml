@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Incident Alerts">
+        <SwitchPreferenceCompat
+            android:key="pref_incident_notify_enable"
+            android:title="Enable Incident Notification"
+            android:summary="Receive notifications for new Incidents"
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <ListPreference
+            android:key="pref_incident_notify_type"
+            android:title="Notification Type"
+            android:entries="@array/settings_incident_type"
+            android:entryValues="@array/settings_incident_type"
+            android:dependency="pref_incident_notify_enable"
+            android:defaultValue="Popup Dialog"/>
+        <SwitchPreferenceCompat
+            android:dependency="pref_incident_notify_enable"
+            android:key="pref_incident_notify_screenon"
+            android:title="Turn Screen On For New Incidents"
+            android:summary="Screen will turn on when new incident arrives."
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <!--<RingtonePreference
+            android:ringtoneType="all"
+            android:showDefault="true"
+            android:showSilent="true"
+            android:dependency="pref_incident_notify_enable"
+            android:persistent="true"
+            android:key="pref_incident_notify_ringtone"
+            android:defaultValue="content://settings/system/notification_sound"
+            android:title="Notification Sound" />-->
+        <SwitchPreferenceCompat
+            android:dependency="pref_incident_notify_enable"
+            android:key="pref_incident_notify_vibrate"
+            android:title="Vibrate on Notification?"
+            android:maxLines="2"
+            android:defaultValue="true" />
+        <SwitchPreferenceCompat
+            android:dependency="pref_incident_notify_enable"
+            android:key="pref_incident_notify_manpower"
+            android:title="Enable Manpower Notifications"
+            android:summary="Will use above notification settings."
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Tone Alerts">
+        <SwitchPreferenceCompat
+            android:key="pref_tones_notify_enable"
+            android:title="Enable Tones Notification"
+            android:summary="Notify 30 seconds after tones go off &amp; no message from dispatch."
+            android:maxLines="2"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <!--TODO ADD RINGTONE PREFERENCE-->
+</PreferenceScreen>

@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">@color/md_red_700</color>
     <color name="colorAccent">@color/md_blue_grey_500</color>
     <color name="text_responding_name">#000000</color>
+
+    <color name="preference_accent">@color/md_red_600</color>
+
+    <color name="newRed">#E51C23</color>
+    <color name="newRedDark">#D01716</color>
+
+    <color name="darkBlue">#0A1722</color>
 </resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AlertDialogTheme"
+    android:gravity="center_horizontal">
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Alert"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_blue_grey_800"
+        android:elevation="2dp"
+        android:id="@+id/dialog_alert_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Apparatus"
+            android:id="@+id/dialog_alert_title"
+            android:textSize="20sp"
+            android:layout_margin="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/md_blue_grey_700">
+
+        <Switch
+            android:id="@+id/apparatus_new_inservice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AlertDialogSwitch"
+            android:text="In Service"
+            android:checked="true"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="17sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/apparatus_new_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textSize="15sp"
+            android:hint="Apparatus Name"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="#607D8B"
+            app:met_baseColor="#000000"/>
+
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/apparatus_new_abbrv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="15sp"
+            android:hint="Apparatus Abbreviation"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="#607D8B"
+            app:met_baseColor="#000000"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/apparatus_new_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="15sp"
+            android:hint="Apparatus Type (Ex. Rescue)"
+            android:inputType="textCapWords"
+            android:maxLines="1"
+            app:met_floatingLabel="normal"
+            app:met_primaryColor="#607D8B"
+            app:met_baseColor="#000000"/>
+
+    </LinearLayout>
+    <!--
+
+<android.support.v7.widget.AppCompatSpinner
+    android:layout_marginTop="16dp"
+    android:id="@+id/apparatus_alertnew_color"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>-->
+
+</LinearLayout>
