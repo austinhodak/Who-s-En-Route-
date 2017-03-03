@@ -33,7 +33,8 @@
             android:paddingTop="20dp"
             android:src="@drawable/ic_arrow_drop_down_white_24dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="24dp" />
+            tools:layout_editor_absoluteY="24dp"
+            android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/responding_station_layout"
@@ -224,6 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nobody from your department is responding."
+                android:textAlignment="center"
                 android:textStyle="normal|bold" />
 
         </LinearLayout>

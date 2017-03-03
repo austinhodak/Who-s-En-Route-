@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 
@@ -50,13 +51,13 @@ public class RespondingSystem {
 
     private DepartmentListener departmentListener;
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
     DataSnapshot currentDepartment;
     String currentDepartmentKey;
     List<DataSnapshot> availableDepartments = new ArrayList<>();
 
 
-    FirebaseUser mUser;
+    FirebaseUser mUser = null;
     DataSnapshot currentUser = null;
     FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseAuth mAuth;
@@ -65,8 +66,6 @@ public class RespondingSystem {
     StorageReference storageReference = storage.getReferenceFromUrl("gs://fire-department-manager.appspot.com");
 
     Context context, applicationContext;
-
-
 
     private static RespondingSystem instance;
 
@@ -106,7 +105,6 @@ public class RespondingSystem {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    mUser = user;
                     getMemberInfo();
                 }
             }
@@ -121,10 +119,15 @@ public class RespondingSystem {
         ValueEventListener memberListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                currentUser = dataSnapshot;
-                Member member = dataSnapshot.getValue(Member.class);
-                sharedPreferences.edit().putString("userName", member.getName()).apply();
-                Log.d(TAG, "getMemberInfo Name Save: " + member.getName());
+                try {
+                    currentUser = dataSnapshot;
+                    Member member = dataSnapshot.getValue(Member.class);
+                    sharedPreferences.edit().putString("userName", member.getName()).apply();
+                    Log.d(TAG, "getMemberInfo Name Save: " + member.getName());
+                    getPermissions();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -136,7 +139,36 @@ public class RespondingSystem {
         return this;
     }
 
-    public RespondingSystem getMembersDepartments(final DataSnapshot currentUser) {
+    public RespondingSystem getMemberInfo(String UID) {
+        ValueEventListener memberListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    currentUser = dataSnapshot;
+                    Member member = dataSnapshot.getValue(Member.class);
+                    sharedPreferences.edit().putString("userName", member.getName()).apply();
+                    Log.d(TAG, "getMemberInfo Name Save: " + member.getName());
+                    getPermissions();
+                    loadInitialData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        database.getReference("users").child(UID).addListenerForSingleValueEvent(memberListener);
+        return this;
+    }
+
+    public RespondingSystem getMembersDepartments(@Nullable DataSnapshot currentUser) {
+
+        if (currentUser == null) {
+            currentUser = this.currentUser;
+        }
         final List<String> departmentIds = new ArrayList<>();
         Set<String> strings = sharedPreferences.getStringSet("departmentIds", null);
         List<String> array = new ArrayList<>(strings);
@@ -301,6 +333,7 @@ public class RespondingSystem {
         respondingReset.put("respondingTime", "");
         respondingReset.put("location/currentLat", "");
         respondingReset.put("location/currentLon", "");
+        respondingReset.put("on_scene", null);
         userReference.updateChildren(respondingReset).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -397,6 +430,11 @@ public class RespondingSystem {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        FirebaseMessaging.getInstance().subscribeToTopic("incidents-"+dataSnapshot.getKey());
+                        FirebaseMessaging.getInstance().subscribeToTopic("manpower-"+dataSnapshot.getKey());
+                        FirebaseMessaging.getInstance().subscribeToTopic("tones-"+dataSnapshot.getKey());
+                        Log.d(TAG, "onDataChange: Subscribed to topics!" + "incidents-"+dataSnapshot.getKey());
+                        FirebaseMessaging.getInstance().subscribeToTopic("incidents-admin");
                     }
 
                     @Override
@@ -569,5 +607,24 @@ public class RespondingSystem {
         //Toast.makeText(context, name[0], Toast.LENGTH_SHORT).show();
         Log.d(TAG, "getUserName: " + name);
         return name;
+    }
+    private Permissions permissions;
+    public Permissions getPermissions() {
+        database.getReference("permissions").child(getCurrentDepartmentKey()).child("members").child(currentUser.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null)
+                permissions = dataSnapshot.getValue(Permissions.class);
+                else {
+                    permissions = null;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        return permissions;
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/faboptions_previous"
+        android:icon="@drawable/ic_skip_previous_24dp"
+        android:enabled="false"
+        android:title="Share" />
+    <item
+        android:id="@+id/faboptions_play"
+        android:icon="@drawable/ic_play_arrow_24dp"
+        android:enabled="false"
+        android:title="Share" />
+    <item
+        android:id="@+id/faboptions_next"
+        android:icon="@drawable/ic_skip_next_24dp"
+        android:enabled="false"
+        android:title="Share" />
+    <item
+        android:id="@+id/faboptions_onscene"
+        android:icon="@drawable/notify_24"
+        android:title="On Scene" />
+    <item
+        android:id="@+id/faboptions_onscne"
+        android:icon="@drawable/dispatch"
+        android:title="Dispatch" />
+    <item
+        android:id="@+id/faboptions_dispatchinfo"
+        android:icon="@drawable/alarm_info"
+        android:title="Share" />
+</menu>

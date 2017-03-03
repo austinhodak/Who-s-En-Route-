@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,12 +60,15 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.StringHolder;
+import com.mikepenz.materialdrawer.interfaces.OnCheckedChangeListener;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mukesh.permissions.AppPermissions;
@@ -73,6 +77,7 @@ import com.zplesac.connectionbuddy.interfaces.ConnectivityChangeListener;
 import com.zplesac.connectionbuddy.models.ConnectivityEvent;
 import com.zplesac.connectionbuddy.models.ConnectivityState;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -145,9 +150,6 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
     @BindView(R.id.bottom_sheet)
     View bottomSheet;
 
-//    @BindView(R.id.map_fab)
-//    FloatingActionButton mapFab;
-
     @BindView(R.id.main_callInfo_complete)
     Button callInfoComplete;
 
@@ -198,6 +200,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
 
         loadDepartment(RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey());
         loadRespondingMembers(RespondingSystem.getInstance(getApplicationContext()).getCurrentDepartmentKey());
+
 
         createDrawer(savedInstanceState);
 
@@ -447,7 +450,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                         new SectionDrawerItem().withName("Department Functions"),
                         membersList.withIdentifier(6),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withSelectable(false).withName(R.string.drawer_item_settings).withIdentifier(10)
+                        new SecondaryDrawerItem().withSelectable(false).withName(R.string.drawer_item_settings).withIcon(R.drawable.settings).withIdentifier(10)
                         //new SecondaryDrawerItem().withSelectable(false).withName("Signup Test").withIdentifier(11)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -486,14 +489,24 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
 
             Log.d(TAG, "SavedInstanceState: null");
         }
+
+        //final List<String> stream = new ArrayList<>();
+        final List<String> streamURLS = new ArrayList<>();
+        final List<String> streamLocations = new ArrayList<>();
+        final List<String> streamTitles = new ArrayList<>();
+        final List<IDrawerItem> streamDrawerItems = new ArrayList<>();
+
+        final ExpandableDrawerItem expandableDrawerItem = new ExpandableDrawerItem().withName("Radio Streams").withSelectable(false).withIcon(R.drawable.walkietalkie).withIdentifier(1999).withSubItems(streamDrawerItems);
+
         secondDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Call Dispatch").withIcon(R.drawable.headset).withIconTintingEnabled(false).withIdentifier(102).withSelectable(false)
-                )
+                        new PrimaryDrawerItem().withName("Call Dispatch").withIcon(R.drawable.headset).withIconTintingEnabled(false).withIdentifier(102).withSelectable(false),
+                        expandableDrawerItem)
                 .addStickyDrawerItems(
                         new PrimaryDrawerItem().withName("Courtesy Message").withIcon(R.drawable.message).withIconTintingEnabled(false).withIdentifier(101).withSelectable(false)
+                        //new SectionDrawerItem().withName("Radio Streams"),
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -513,6 +526,114 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
         drawer.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
 
         handler = new Handler();
+
+        mDatabase.child("departments/"+RespondingSystem.getInstance(this).getCurrentDepartmentKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    String countyID = dataSnapshot.child("county").getValue().toString();
+                    mDatabase.child("counties/"+countyID+"/streams").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, final String s) {
+                            String location = dataSnapshot.child("location").getValue().toString();
+                            String name = dataSnapshot.child("name").getValue().toString();
+                            String url = dataSnapshot.child("url").getValue().toString();
+
+                            //stream.add(name + " - " + location);
+                            streamURLS.add(url);
+                            streamLocations.add(location);
+                            streamTitles.add(name);
+
+                            final boolean[] isPlaying = {false};
+
+                            streamDrawerItems.add(new SwitchDrawerItem().withName(name).withSelectable(false).withDescription(location).withIdentifier(2000 + streamURLS.size()).withOnCheckedChangeListener(new OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(final IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+                                    if (isChecked) {
+                                        drawerItem.withEnabled(false);
+                                        secondDrawer.updateItem(drawerItem);
+                                        AudioStreamService.getInstance(NavDrawerActivity.this).setStreamListener(new AudioStreamService.StreamListener() {
+                                            @Override
+                                            public void onStreamLoaded(String streamURL, String streamName, MediaPlayer stream) {
+                                                drawerItem.withEnabled(true);
+                                                secondDrawer.updateItem(drawerItem);
+                                                secondDrawer.updateName(drawerItem.getIdentifier(), new StringHolder(streamName + " (✓)"));
+                                                isPlaying[0] = true;
+                                            }
+
+                                            @Override
+                                            public void onStreamStopped(String streamURL) {
+                                                drawerItem.withEnabled(true);
+                                                secondDrawer.updateItem(drawerItem);
+                                                secondDrawer.updateName(drawerItem.getIdentifier(), new StringHolder(streamTitles.get(streamURLS.indexOf(streamURL)) + " - Stopped"));
+                                                isPlaying[0] = false;
+                                            }
+
+                                            @Override
+                                            public void onStreamPaused(String streamURL) {
+                                                drawerItem.withEnabled(true);
+                                                secondDrawer.updateItem(drawerItem);
+                                                secondDrawer.updateName(drawerItem.getIdentifier(), new StringHolder(streamTitles.get(streamURLS.indexOf(streamURL)) + " - Paused"));
+                                                isPlaying[0] = false;
+                                            }
+
+                                            @Override
+                                            public void onStreamResumed(String streamURL) {
+                                                drawerItem.withEnabled(true);
+                                                secondDrawer.updateItem(drawerItem);
+                                                secondDrawer.updateName(drawerItem.getIdentifier(), new StringHolder(streamTitles.get(streamURLS.indexOf(streamURL)) + " (✓)"));
+                                                isPlaying[0] = true;
+                                            }
+                                        });
+                                        try {
+                                            AudioStreamService.getInstance(NavDrawerActivity.this).startStream(streamURLS.get(streamDrawerItems.indexOf(drawerItem)), streamTitles.get(streamDrawerItems.indexOf(drawerItem)), streamLocations.get(streamDrawerItems.indexOf(drawerItem)));
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else {
+                                        if (!isPlaying[0]) {
+
+                                        } else {
+                                            AudioStreamService.getInstance(NavDrawerActivity.this).stopStream(streamURLS.get(streamDrawerItems.indexOf(drawerItem)));
+                                            secondDrawer.updateName(drawerItem.getIdentifier(), new StringHolder(streamTitles.get(streamDrawerItems.indexOf(drawerItem))));
+                                        }
+                                    }
+                                }
+                            }));
+
+                            secondDrawer.updateItem(expandableDrawerItem);
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -746,7 +867,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
 
     private void checkForIncidents(Department department, String departmentID) {
         Log.d("Incident", department.isActiveIncident() + "");
-        if (department.isActiveIncident()) {
+        if (department.isActiveIncident() && RespondingSystem.getInstance(this).getCurrentDepartmentKey() == departmentID) {
             //Load then Show.
             bottomSheet.setVisibility(View.VISIBLE);
 
@@ -774,7 +895,11 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
                 }
             });*/
             mBottomSheetBehavior.setHideable(true);
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            try {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             frameLayout.setPadding(0, 0, 0, 0);
             if (listener != null)
                 listener.onBottomSheetChanged(mBottomSheetBehavior.getState());
@@ -866,22 +991,10 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
             mAuth.removeAuthStateListener(mAuthListener);
         }
         ConnectionBuddy.getInstance().unregisterFromConnectivityEvents(this);
-
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        incidentMenuItem = menu.findItem(R.id.menu_incident_main);
-        playStreamMenu = menu.findItem(R.id.menu_stream_play);
-        pauseStreamMenu = menu.findItem(R.id.menu_stream_pause);
-        MenuItem quickRespond = menu.findItem(R.id.menu_quick_respond);
-        if (mQuickRespondShortcutEnabled) {
-            quickRespond.setVisible(true);
-        }
-        return true;
-    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1017,6 +1130,7 @@ public class NavDrawerActivity extends AppCompatActivity implements View.OnClick
             updates.put(postSnapshot.getKey() + "/location/currentLat", "");
             updates.put(postSnapshot.getKey() + "/location/currentLon", "");
             updates.put(postSnapshot.getKey() + "/respondingAgency", "");
+            updates.put(postSnapshot.getKey() + "/on_scene", null);
         }
 
         mDatabase.child("users").updateChildren(updates);

@@ -97,6 +97,7 @@
         <service android:name=".WLocationService" />
         <service android:name=".WLocationService$GeofenceTransitionsIntentService" />
         <service android:name=".AudioFeedService" />
+        <service android:name=".AudioStreamService" />
 
         <receiver android:name=".WidgetProvider">
             <intent-filter>
@@ -134,7 +135,16 @@
         <activity
             android:name=".DepartmentList"
             android:theme="@style/DepartmentListTheme" />
-        <activity android:name=".DepartmentAdd" android:theme="@style/DepartmentAddTheme"></activity>
+        <activity
+            android:name=".DepartmentAdd"
+            android:theme="@style/DepartmentAddTheme" />
+        <activity android:name=".OnSceneActivity"
+            android:theme="@style/OnSceneTheme"
+            android:parentActivityName=".NavDrawerActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.fireapps.firedepartmentmanager.NavDrawerActivity" />
+        </activity>
     </application>
 
 </manifest>

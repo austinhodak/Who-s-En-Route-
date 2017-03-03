@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -19,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,9 +32,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.borax12.materialdaterangepicker.date.DatePickerDialog;
+import com.borax12.materialdaterangepicker.time.RadialPickerLayout;
+import com.borax12.materialdaterangepicker.time.TimePickerDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +48,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.joaquimley.faboptions.FabOptions;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -63,7 +67,7 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.StatelessSection;
  * Created by austinhodak on 6/15/16.
  */
 
-public class WhosEnRouteFragment extends Fragment implements View.OnClickListener {
+public class WhosEnRouteFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     ImageView moreButton;
     TextView mStation, mScene, mCantRespond;
@@ -73,7 +77,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
     FirebaseUser firebaseUser;
     DatabaseReference userReference;
     FirebaseDatabase firebaseDatabase;
-    List<Member> listStation, listScene, listCR, listAtStation, listUnknown;
+    List<DataSnapshot> listStation, listScene, listCR, listAtStation, listUnknown;
     SectionedRecyclerViewAdapter sectionAdapter;
     MySection stationSection, sceneSection, CRSection, atStationSection, unknownSection;
     RelativeLayout emptyLayout;
@@ -115,6 +119,19 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             // No user is signed in
         }
 
+        FabOptions fabOptions = (FabOptions) view.findViewById(R.id.fab_options);
+        fabOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.faboptions_onscene:
+                        Intent intent = new Intent(getActivity(), OnSceneActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
+
         getActivity().setTitle("Who's En Route?");
         Log.d("RespondingUser", firebaseUser.getUid());
 
@@ -142,7 +159,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         mParentLayout = (LinearLayout) view.findViewById(R.id.linearLayout);
 
         emptyLayout = (RelativeLayout) view.findViewById(R.id.empty_layout);
-        final ImageView imageView = (ImageView)view.findViewById(R.id.imageView);
+        final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
         final RotateAnimation anim = new RotateAnimation(0.0f, -7.0f, Animation.RELATIVE_TO_SELF, 0.4f, Animation.RELATIVE_TO_SELF, 0.85f);
         anim.setInterpolator(new LinearInterpolator());
         anim.setRepeatCount(Animation.INFINITE);
@@ -187,36 +204,36 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                         Member member = dataSnapshot.getValue(Member.class);
                         int index = 0;
                         try {
-                            for (Member object : listStation) {
-                                if (object.getName().equals(member.getName())) {
+                            for (DataSnapshot object : listStation) {
+                                if (object.child("name").getValue().equals(member.getName())) {
                                     index = listStation.indexOf(object);
                                     listStation.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
-                            for (Member object : listScene) {
-                                if (object.getName().equals(member.getName())) {
+                            for (DataSnapshot object : listScene) {
+                                if (object.child("name").getValue().equals(member.getName())) {
                                     index = listScene.indexOf(object);
                                     listScene.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
-                            for (Member object : listCR) {
-                                if (object.getName().equals(member.getName())) {
+                            for (DataSnapshot object : listCR) {
+                                if (object.child("name").getValue().equals(member.getName())) {
                                     index = listCR.indexOf(object);
                                     listCR.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
-                            for (Member object : listAtStation) {
-                                if (object.getName().equals(member.getName())) {
+                            for (DataSnapshot object : listAtStation) {
+                                if (object.child("name").getValue().equals(member.getName())) {
                                     index = listStation.indexOf(object);
                                     listAtStation.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
                                 }
                             }
-                            for (Member object : listUnknown) {
-                                if (object.getName().equals(member.getName())) {
+                            for (DataSnapshot object : listUnknown) {
+                                if (object.child("name").getValue().equals(member.getName())) {
                                     index = listUnknown.indexOf(object);
                                     listUnknown.remove(object);
                                     sectionAdapter.notifyDataSetChanged();
@@ -235,42 +252,42 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                                             if (sectionAdapter.getSection("Station") == null) {
                                                 sectionAdapter.addSection("Station", stationSection);
                                             }
-                                            stationSection.addRow(member);
+                                            stationSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "SCENE":
                                             if (sectionAdapter.getSection("Scene") == null) {
                                                 sectionAdapter.addSection("Scene", sceneSection);
                                             }
-                                            sceneSection.addRow(member);
+                                            sceneSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "NR":
                                             if (sectionAdapter.getSection("CR") == null) {
                                                 sectionAdapter.addSection("CR", CRSection);
                                             }
-                                            CRSection.addRow(member);
+                                            CRSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "CAN'T RESPOND":
                                             if (sectionAdapter.getSection("CR") == null) {
                                                 sectionAdapter.addSection("CR", CRSection);
                                             }
-                                            CRSection.addRow(member);
+                                            CRSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "AT STATION":
                                             if (sectionAdapter.getSection("At Station") == null) {
                                                 sectionAdapter.addSection("At Station", atStationSection);
                                             }
-                                            atStationSection.addRow(member);
+                                            atStationSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         default:
                                             if (sectionAdapter.getSection("Unknown") == null) {
                                                 sectionAdapter.addSection("Unknown", unknownSection);
                                             }
-                                            unknownSection.addRow(member);
+                                            unknownSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                     }
@@ -283,42 +300,42 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                                             if (sectionAdapter.getSection("Station") == null) {
                                                 sectionAdapter.addSection("Station", stationSection);
                                             }
-                                            stationSection.addRow(member);
+                                            stationSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "SCENE":
                                             if (sectionAdapter.getSection("Scene") == null) {
                                                 sectionAdapter.addSection("Scene", sceneSection);
                                             }
-                                            sceneSection.addRow(member);
+                                            sceneSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "NR":
                                             if (sectionAdapter.getSection("CR") == null) {
                                                 sectionAdapter.addSection("CR", CRSection);
                                             }
-                                            CRSection.addRow(member);
+                                            CRSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "CAN'T RESPOND":
                                             if (sectionAdapter.getSection("CR") == null) {
                                                 sectionAdapter.addSection("CR", CRSection);
                                             }
-                                            CRSection.addRow(member);
+                                            CRSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         case "AT STATION":
                                             if (sectionAdapter.getSection("At Station") == null) {
                                                 sectionAdapter.addSection("At Station", atStationSection);
                                             }
-                                            atStationSection.addRow(member);
+                                            atStationSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                         default:
                                             if (sectionAdapter.getSection("Unknown") == null) {
                                                 sectionAdapter.addSection("Unknown", unknownSection);
                                             }
-                                            unknownSection.addRow(member);
+                                            unknownSection.addRow(dataSnapshot);
                                             sectionAdapter.notifyDataSetChanged();
                                             break;
                                     }
@@ -409,6 +426,18 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                                 setRespondingSelected(5, false);
                                 updateRespondingStatus(5);
                                 break;
+                            case R.id.resp_more_oos:
+                                Calendar now = Calendar.getInstance();
+                                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                                        WhosEnRouteFragment.this,
+                                        now.get(Calendar.YEAR),
+                                        now.get(Calendar.MONTH),
+                                        now.get(Calendar.DAY_OF_MONTH)
+                                );
+                                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+                                dpd.setAccentColor(getResources().getColor(R.color.md_blue_500));
+                                dpd.setThemeDark(true);
+                                break;
                         }
                         return false;
                     }
@@ -425,7 +454,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                     }).setActionTextColor(getResources().getColor(R.color.new_accent));
                     View view = snackbar.getView();
                     view.setBackgroundColor(getResources().getColor(R.color.snackbar));
-                    ((TextView)view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
+                    ((TextView) view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
                     snackbar.show();
                 } else {
                     setRespondingSelected(0, false);
@@ -443,7 +472,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
                     }).setActionTextColor(getResources().getColor(R.color.new_accent));
                     View view = snackbar.getView();
                     view.setBackgroundColor(getResources().getColor(R.color.snackbar));
-                    ((TextView)view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
+                    ((TextView) view.findViewById(android.support.design.R.id.snackbar_text)).setTextColor(getResources().getColor(R.color.text_responding_name));
                     snackbar.show();
                 } else {
                     setRespondingSelected(1, false);
@@ -686,6 +715,9 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 Member member = dataSnapshot.getValue(Member.class);
+                if (member == null) {
+                    return;
+                }
                 mCurrentMember = member;
                 // ...
                 if (member.getIsResponding() && member.getRespondingTo() != null) {
@@ -733,13 +765,34 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth, int yearEnd, int monthOfYearEnd, int dayOfMonthEnd) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog tpd = TimePickerDialog.newInstance(
+                WhosEnRouteFragment.this,
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                false
+        );
+        tpd.setAccentColor(getResources().getColor(R.color.md_blue_500));
+        tpd.setThemeDark(true);
+        tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+        Toast.makeText(getActivity(), "" + year + monthOfYear + dayOfMonth, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int hourOfDayEnd, int minuteEnd) {
+        Toast.makeText(getActivity(), "" + hourOfDay + minute, Toast.LENGTH_SHORT).show();
+    }
+
+
     class MySection extends StatelessSection {
 
         String title;
-        List<Member> list;
+        List<DataSnapshot> list;
         Context context;
 
-        public MySection(String title, List<Member> list, Context context) {
+        public MySection(String title, List<DataSnapshot> list, Context context) {
             // call constructor with layout resources for this Section header, footer and items
             super(R.layout.listitem_section, R.layout.listitem_responding);
 
@@ -760,56 +813,201 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
         }
 
 
-
         @Override
         public void onBindItemViewHolder(RecyclerView.ViewHolder holder, int position) {
             ItemViewHolder itemHolder = (ItemViewHolder) holder;
-            final Member member = list.get(position);
+            final DataSnapshot member = list.get(position);
 
             ShapeDrawable shapeDrawable = new ShapeDrawable();
             shapeDrawable.setShape(new OvalShape());
-            if (member.getPositionColor() != null) {
-                shapeDrawable.getPaint().setColor(Color.parseColor("#" + member.getPositionColor()));
+            if (member.child("positionColor").getValue() != null) {
+                shapeDrawable.getPaint().setColor(Color.parseColor("#" + member.child("positionColor").getValue()));
             } else {
                 shapeDrawable.getPaint().setColor(getResources().getColor(R.color.md_blue_500));
             }
-            itemHolder.posImage.setBackground(shapeDrawable);
+            try {
+                itemHolder.posImage.setBackground(shapeDrawable);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            itemHolder.tvAbbrv.setText(member.getPositionAbbrv());
+            try {
+                itemHolder.tvAbbrv.setText(member.child("positionAbbrv").getValue().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // bind your view here
-            itemHolder.tvName.setText(member.getName());
+            try {
+                itemHolder.tvName.setText(member.child("name").getValue().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (member.child("on_scene").exists()) {
+                itemHolder.bottomText.removeAllViewsInLayout();
+                try {
+                    itemHolder.topTextLL.removeViewAt(2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                MaterialBadgeTextView onSceneBadge = new MaterialBadgeTextView(getActivity());
+                onSceneBadge.setTextColor(Color.parseColor("#000000"));
+                onSceneBadge.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                onSceneBadge.setText("ON SCENE");
+                onSceneBadge.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                itemHolder.topTextLL.addView(onSceneBadge);
+
+                if (member.child("on_scene/EMS").exists()) {
+                    //onSceneBadge.setText("EMS");
+                    if (itemHolder.bottomText.getChildCount() <= 5) {
+                        if (member.child("on_scene/EMS").getValue().toString().contains("ALS")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_blue_500));
+                            ALSBADGE.setText("ALS REQUEST");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        } else if (member.child("on_scene/EMS").getValue().toString().contains("SIGN OFF")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_blue_500));
+                            ALSBADGE.setText("SIGN OFF");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+                    }
+                }
+
+                if (member.child("on_scene/MVA").exists()) {
+                    //onSceneBadge.setText("MVA");
+                    if (itemHolder.bottomText.getChildCount() <= 5) {
+                        if (member.child("on_scene/MVA").getValue().toString().contains("ENTRAPMENT")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("ENTRAPMENT");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+
+                        if (member.child("on_scene/MVA").getValue().toString().contains("FIRE")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("FIRE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+
+                        if (member.child("on_scene/MVA").getValue().toString().contains("INJURIES")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("INJURIES");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+                    }
+                }
+
+                if (member.child("on_scene/STRUCTF").exists()) {
+                    //onSceneBadge.setText("STRUCTURE FIRE");
+                    if (itemHolder.bottomText.getChildCount() <= 5) {
+                        if (member.child("on_scene/STRUCTF").getValue().toString().contains("ENTRAPMENT")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("ENTRAPMENT");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+
+                        if (member.child("on_scene/STRUCTF").getValue().toString().contains("FIRE")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("FIRE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+
+                        if (member.child("on_scene/STRUCTF").getValue().toString().contains("SMOKE")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_red_500));
+                            ALSBADGE.setText("SMOKE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+                    }
+                }
+
+                if (member.child("on_scene/OTHER").exists()) {
+                    if (itemHolder.bottomText.getChildCount() <= 5) {
+                        if (member.child("on_scene/OTHER").getValue().toString().contains("ENTRAPMENT")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_teal_500));
+                            ALSBADGE.setText("TREE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        } else
+
+                        if (member.child("on_scene/OTHER").getValue().toString().contains("WIRES DOWN") && !member.child("on_scene/OTHER").getValue().toString().contains("LIVE")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_teal_500));
+                            ALSBADGE.setText("WIRE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        } else
+
+                        if (member.child("on_scene/OTHER").getValue().toString().contains("LIVE")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_deep_orange_500));
+                            ALSBADGE.setText("LIVE WIRE");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+                    }
+                }
+
+                if (member.child("on_scene/SAFETY").exists()) {
+                    if (itemHolder.bottomText.getChildCount() <= 5) {
+                        if (member.child("on_scene/SAFETY").getValue().toString().contains("CAUTION")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#000000"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_yellow_500));
+                            ALSBADGE.setText("CAUTION");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        } else if (member.child("on_scene/SAFETY").getValue().toString().contains("MANPOWER")) {
+                            MaterialBadgeTextView ALSBADGE = new MaterialBadgeTextView(getActivity());
+                            ALSBADGE.setTextColor(Color.parseColor("#FFFFFF"));
+                            ALSBADGE.setBackgroundColor(getResources().getColor(R.color.md_green_500));
+                            ALSBADGE.setText("MANPOWER");
+                            ALSBADGE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                            itemHolder.bottomText.addView(ALSBADGE);
+                        }
+                    }
+                }
+            }
 
             itemHolder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Long.valueOf(member.getPhoneNum()) != null) {
-                        String menu[] = {"Call", "Text"};
-                        new MaterialDialog.Builder(context)
-                                .title(member.getName())
-                                .items(menu)
-                                .itemsGravity(GravityEnum.CENTER)
-                                .titleColorRes(R.color.text_responding_name)
-                                .backgroundColorRes(R.color.bottom_sheet_background)
-                                .itemsCallback(new MaterialDialog.ListCallback() {
-                                    @Override
-                                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                        switch (which) {
-                                            case 0:
-                                                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", String.valueOf(member.getPhoneNum()), null));
-                                                startActivity(intent);
-                                                break;
-                                            case 1:
-                                                Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-                                                sendIntent.setData(Uri.parse("sms:" + member.getPhoneNum()));
-                                                startActivity(sendIntent);
-                                                break;
-                                        }
-                                    }
-                                })
-                                .negativeText("Cancel")
-                                .show();
-                    }
+                    MaterialDialog dialog = new MaterialDialog.Builder(context)
+                            .customView(R.layout.dialog_onscene_member, false)
+                            .show();
+
+                    View customView = dialog.getCustomView();
+                    TextView title = (TextView) customView.findViewById(R.id.dialog_alert_title);
+                    title.setText(member.child("name").getValue().toString());
+
+
                 }
             });
 
@@ -818,12 +1016,14 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             try {
                 Date date;
 
-                date = dateFormat.parse(member.getRespondingTime());
+                date = dateFormat.parse(member.child("respondingTime").getValue().toString());
 
                 Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
                 calendar.setTime(date);
 
-                itemHolder.tvTime.setText(String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)));
+                String time = String.format("%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+
+                itemHolder.tvTime.setText(time);
             } catch (ParseException e) {
                 e.printStackTrace();
                 itemHolder.tvTime.setVisibility(View.INVISIBLE);
@@ -846,7 +1046,7 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             headerHolder.tvTitle.setText(title);
         }
 
-        public void addRow(Member item) {
+        public void addRow(DataSnapshot item) {
             this.list.add(item);
         }
     }
@@ -865,9 +1065,11 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private final View rootView;
-        private final TextView tvName, tvAbbrv, tvTime;
+        private final TextView tvName, tvAbbrv;
+        private final MaterialBadgeTextView tvTime;
         private final RelativeLayout posLayout;
         private final ImageView posImage;
+        private final LinearLayout bottomText, topTextLL;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -875,8 +1077,10 @@ public class WhosEnRouteFragment extends Fragment implements View.OnClickListene
             rootView = view;
             tvName = (TextView) view.findViewById(R.id.LI_responding_name);
             tvAbbrv = (TextView) view.findViewById(R.id.LI_responding_abbrv);
-            tvTime = (TextView) view.findViewById(R.id.LI_responding_time);
+            tvTime = (MaterialBadgeTextView) view.findViewById(R.id.LI_responding_time);
             posLayout = (RelativeLayout) view.findViewById(R.id.LI_pos_layout);
+            bottomText = (LinearLayout) view.findViewById(R.id.LI_responding_bottomText);
+            topTextLL = (LinearLayout) view.findViewById(R.id.LI_responding_textLL);
             posImage = (ImageView) view.findViewById(R.id.LI_pos_image);
         }
     }

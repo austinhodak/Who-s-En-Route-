@@ -40,6 +40,12 @@
         <item name="colorControlHighlight">@color/md_red_700</item>
     </style>
 
+    <style name="OnSceneTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#09314B</item>
+        <item name="colorPrimaryDark">#07263B</item>
+        <item name="colorAccent">#19c4d8</item>
+    </style>
+
     <style name="SignupTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#EF9D51</item>
         <item name="colorPrimaryDark">@color/md_red_700</item>
@@ -54,7 +60,7 @@
     <style name="NavDrawerTheme" parent="AppTheme">
         <item name="colorPrimary">@color/toolbar_background</item>
         <item name="colorPrimaryDark">@color/statusbar_background</item>
-        <item name="colorAccent">@color/md_blue_grey_500</item>
+        <item name="colorAccent">@color/new_accent</item>
 
         <item name="material_drawer_background">@color/material_drawer_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>

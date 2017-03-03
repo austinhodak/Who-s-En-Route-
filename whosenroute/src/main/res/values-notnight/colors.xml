@@ -26,7 +26,10 @@
     <color name="new_accent">@color/newRed</color>
     <color name="snackbar">#FFFFFF</color>
 
-    <color name="fab_accent">@color/md_blue_grey_500</color>
+    <color name="fab_accent">@color/md_blue_500</color>
 
     <color name="button_background">#FFFFFF</color>
+
+    <color name="mdtp_accent_color">@color/md_blue_500</color>
+    <color name="mdtp_accent_color_dark">@color/md_blue_700</color>
 </resources>

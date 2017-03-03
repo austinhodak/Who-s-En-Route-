@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="memberAddRanks" >
+        <item>Chief</item>
+        <item>Officer</item>
+        <item>Firefighter</item>
+        <item>Medical</item>
+        <item>Driver</item>
+        <item>Other</item>
+        <item>Fire Police</item>
+    </string-array>
+</resources>

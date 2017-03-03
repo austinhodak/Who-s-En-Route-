@@ -50,7 +50,7 @@ public class LoginDispatch extends Activity {
             finish();
         } else {
             // No user is signed in
-            Intent i = new Intent(this, LoginActivity.class);
+            Intent i = new Intent(this, FirstSignupActivity.class);
             i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivityForResult(i, LOGIN_REQUEST);
         }

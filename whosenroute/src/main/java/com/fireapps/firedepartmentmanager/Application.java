@@ -1,5 +1,6 @@
 package com.fireapps.firedepartmentmanager;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.multidex.MultiDexApplication;
@@ -40,6 +41,9 @@ public class Application extends MultiDexApplication {
 
 
         instance = this;
+
+        Intent intent = new Intent(this, AudioStreamService.class);
+        startService(intent);
 
         //getRespondingSystem();
 

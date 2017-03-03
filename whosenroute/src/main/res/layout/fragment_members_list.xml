@@ -63,6 +63,16 @@
         app:menu_icon="@drawable/ic_add_white_24dp">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/member_main_fab_preapprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_24dp_compat"
+            fab:fab_colorNormal="@color/md_green_500"
+            fab:fab_colorPressed="@color/md_green_500"
+            fab:fab_label="Pre-Approve Member"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/member_main_fab_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

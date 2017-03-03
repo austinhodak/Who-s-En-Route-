@@ -407,7 +407,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
             }
         });
 
-        Permissions.getInstance(getActivity()).canMapEditMarker();
+        if (RespondingSystem.getInstance(getActivity()).getPermissions() != null)
+        RespondingSystem.getInstance(getActivity()).getPermissions().isMapMarkerEdit();
 
     }
 

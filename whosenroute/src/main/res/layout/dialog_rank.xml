@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/signup_position_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:hint="Primary Position (Eg. Chief)*"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:textSize="15sp"
+                app:met_baseColor="#000"
+                app:met_primaryColor="@color/md_blue_500" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/signup_position_abbrv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:hint="Position Abbreviation (Eg. 6510)*"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:textSize="15sp"
+                android:maxLength="6"
+                app:met_baseColor="#000"
+                app:met_primaryColor="@color/md_blue_500" />
+
+            <Button
+                android:id="@+id/signup_position_ranks"
+                android:text="Select Ranks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_blue_500"
+                android:backgroundTint="#FFF"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/signup_position_mainrank"
+                android:text="Select Main Rank"
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/md_blue_500"
+                android:backgroundTint="#FFF"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

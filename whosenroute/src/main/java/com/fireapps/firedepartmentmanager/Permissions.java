@@ -1,30 +1,43 @@
 package com.fireapps.firedepartmentmanager;
 
-import android.content.Context;
+import com.google.firebase.database.IgnoreExtraProperties;
 
-/**
- * Created by austinhodak on 8/8/16.
- */
 
+@IgnoreExtraProperties
 public class Permissions {
 
-    private static Permissions instance;
-    private final Context context;
+    private boolean mapMarkerEdit;
+    private boolean memberAdd, memberDelete, memberEdit;
+    private boolean apparatusAdd, apparatusDelete, apparatusEdit;
 
-    private boolean mapEditMarker;
-
-    public synchronized static Permissions getInstance(Context context) {
-        if (instance == null) {
-            instance = new Permissions(context);
-        }
-        return instance;
+    public Permissions() {
     }
 
-    public Permissions(Context context) {
-        this.context = context;
+    public boolean isApparatusAdd() {
+        return apparatusAdd;
     }
 
-    public boolean canMapEditMarker() {
-        return mapEditMarker;
+    public boolean isApparatusDelete() {
+        return apparatusDelete;
+    }
+
+    public boolean isApparatusEdit() {
+        return apparatusEdit;
+    }
+
+    public boolean isMapMarkerEdit() {
+        return mapMarkerEdit;
+    }
+
+    public boolean isMemberAdd() {
+        return memberAdd;
+    }
+
+    public boolean isMemberDelete() {
+        return memberDelete;
+    }
+
+    public boolean isMemberEdit() {
+        return memberEdit;
     }
 }

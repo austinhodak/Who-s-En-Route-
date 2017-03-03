@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginLeft="16dp">
+    android:layout_marginLeft="16dp"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,49 +12,73 @@
         android:gravity="center_vertical">
 
         <RelativeLayout
+            android:id="@+id/LI_pos_layout"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:id="@+id/LI_pos_layout"
             android:layout_centerVertical="true">
 
             <ImageView
+                android:id="@+id/LI_pos_image"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:id="@+id/LI_pos_image" />
+                android:background="@color/md_red_500" />
 
             <com.lb.auto_fit_textview.AutoResizeTextView
+                android:id="@+id/LI_responding_abbrv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="#FFFFFF"
-                android:textSize="13sp"
-                android:text="6510"
-                android:padding="4dp"
                 android:layout_centerInParent="true"
                 android:elevation="0dp"
-                android:textStyle="normal|bold"
                 android:gravity="center"
-                android:id="@+id/LI_responding_abbrv" />
+                android:padding="4dp"
+                android:text="6510"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="normal|bold" />
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_toRightOf="@+id/LI_pos_layout"
             android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
             android:layout_toLeftOf="@+id/LI_responding_time"
+            android:layout_toRightOf="@+id/LI_pos_layout"
             android:gravity="center_vertical"
-            android:layout_marginLeft="16dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:text="Austin Hodak"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/LI_responding_textLL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/LI_responding_name"
-                android:gravity="center_vertical"
-                android:textSize="17sp"
-                android:textColor="@color/text_responding_name" />
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/LI_responding_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="4dp"
+                    android:gravity="center_vertical"
+                    android:text="Austin Hodak"
+                    android:textColor="@color/text_responding_name"
+                    android:textSize="17sp" />
+
+                <com.fireapps.firedepartmentmanager.MaterialBadgeTextView
+                    android:id="@+id/LI_responding_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    app:mbtv_backgroundColor="#FFFFFF" />
+
+            </LinearLayout>
 
             <!--<TextView
                 android:text=""
@@ -71,17 +94,40 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:textSize="14sp" />-->
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/LI_responding_bottomText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!--
+
+                <com.fireapps.firedepartmentmanager.MaterialBadgeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ON SCENE"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    app:mbtv_backgroundColor="@color/md_deep_orange_500" />-->
+
+                </LinearLayout>
+            </HorizontalScrollView>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/LI_responding_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12:34"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+        <!--<TextView-->
+        <!--android:id="@+id/LI_responding_time"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="12:34"-->
+        <!--/>-->
+
 
     </RelativeLayout>
 

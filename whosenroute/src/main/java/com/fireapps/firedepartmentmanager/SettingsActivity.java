@@ -5,12 +5,15 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +44,36 @@ public class SettingsActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings_menu_bug:
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","bugs@whosenroute.com", null));
+                intent.putExtra(Intent.EXTRA_EMAIL, "bugs@whosenroute.com");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Bug Report");
+
+                startActivity(Intent.createChooser(intent, "Send Bug Report"));
+                break;
+            case R.id.settings_menu_feature:
+                Intent intent2 = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                        "mailto","features@whosenroute.com", null));
+                intent2.putExtra(Intent.EXTRA_EMAIL, "features@whosenroute.com");
+                intent2.putExtra(Intent.EXTRA_SUBJECT, "Feature Suggestion");
+
+                startActivity(Intent.createChooser(intent2, "Send Feature Suggestion"));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public static class SettingsMain extends PreferenceFragmentCompat {

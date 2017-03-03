@@ -14,9 +14,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
-
-import java.io.IOException;
 
 /**
  * Created by austinhodak on 6/29/16.
@@ -26,17 +25,33 @@ public class AudioFeedService extends Service {
 
     private MediaPlayer mediaPlayer;
     private LocalBroadcastManager broadcaster;
+    private boolean isStarted = false;
+
+    private String feedURL, feedName;
 
     @Override
     public void onCreate() {
         super.onCreate();
         broadcaster = LocalBroadcastManager.getInstance(getApplicationContext());
-        startFeed();
+        //startFeed();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        String url = intent.getStringExtra("url");
+        if (url != null) {
+            if (feedURL == null) {
+                feedURL = url;
+                startFeed();
+            } else if (feedURL == url) {
+
+            }
+        } else {
+            feedURL = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedURL", "");
+            feedName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedName", "");
+        }
+        feedName = intent.getStringExtra("name");
         handleIntent(intent);
         return START_STICKY;
     }
@@ -45,14 +60,14 @@ public class AudioFeedService extends Service {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource("http://relay.broadcastify.com:80/830465884.mp3");
-        } catch (IOException e) {
+            mediaPlayer.setDataSource(feedURL);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         mediaPlayer.prepareAsync();
 
         sendStatusUpdates("connecting");
-        Log.d("Stream", "Connecting");
+        Log.d("Stream", "Connecting : " + feedURL);
 
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
@@ -63,10 +78,11 @@ public class AudioFeedService extends Service {
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.d("Stream", "Prepared");
+                Log.d("Stream", "Prepared : " + feedURL);
                 mediaPlayer.start();
                 sendStatusUpdates("play");
-                buildNotification(generateAction(R.drawable.ic_pause_24dp, "Pause", "PAUSE"), false);
+                buildNotification(generateAction(R.drawable.ic_pause_24dp, "Pause", "PAUSE", feedURL), false);
+                isStarted = true;
             }
         });
 
@@ -109,7 +125,7 @@ public class AudioFeedService extends Service {
                 .setSmallIcon(R.drawable.icon_nottify)
                 //.setLargeIcon(notificationLarge)
                 .setContentTitle("Who's En Route Scanner")
-                .setContentText("County Audio")
+                .setContentText(feedName)
                 .setColor(getResources().getColor(R.color.toolbar_background))
                 .addAction(action)
                 .setDeleteIntent(pendingIntent)
@@ -136,14 +152,35 @@ public class AudioFeedService extends Service {
             stopStream();
         } else if (action.equalsIgnoreCase("PAUSE")) {
             //Log.d("Stream", "Paused");
-            buildNotification(generateAction(R.drawable.ic_play_arrow_24dp, "Play", "PLAY"), true);
+            buildNotification(generateAction(R.drawable.ic_play_arrow_24dp, "Play", "PLAY", feedURL), true);
             mediaPlayer.pause();
             sendStatusUpdates("PAUSE");
         } else if (action.equalsIgnoreCase("PLAY")) {
+            if (!isStarted){
+                return;
+            }
             //Log.d("Stream", "Play");
-            buildNotification(generateAction(R.drawable.ic_pause_24dp, "Pause", "PAUSE"), false);
-            mediaPlayer.start();
-            sendStatusUpdates("PLAY");
+            if (intent.getStringExtra("url") != feedURL) {
+                Log.d("Stream", "Disconnect from current feed: " + feedURL);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(2);
+                try {
+                    feedURL = intent.getStringExtra("url");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    feedURL = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedURL", "");
+                    feedName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedName", "");
+                }
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                startFeed();
+            } else {
+                feedURL = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedURL", "");
+                feedName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("scannerSelectedName", "");
+                buildNotification(generateAction(R.drawable.ic_pause_24dp, "Pause", "PAUSE", feedURL), false);
+                mediaPlayer.start();
+                sendStatusUpdates("PLAY");
+            }
         } else if (action.equals("UPDATE")) {
             if (mediaPlayer.isPlaying()) {
                 sendStatusUpdates("PLAY");
@@ -154,19 +191,23 @@ public class AudioFeedService extends Service {
     }
 
     private void stopStream() {
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        try {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.d("Stream", "Stop");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(2);
         sendStatusUpdates("STOP");
-
         stopSelf();
     }
 
-    private Notification.Action generateAction(int icon, String title, String intentAction) {
+    private Notification.Action generateAction(int icon, String title, String intentAction, String URL) {
         Intent intent = new Intent(getApplicationContext(), AudioFeedService.class);
         intent.setAction(intentAction);
+        intent.putExtra("url", URL);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
         return new Notification.Action.Builder(icon, title, pendingIntent).build();
     }

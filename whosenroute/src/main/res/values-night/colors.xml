@@ -29,4 +29,7 @@
     <color name="fab_accent">#19c4d8</color>
 
     <color name="button_background">#061E2D</color>
+
+    <color name="mdtp_accent_color">#09314B</color>
+    <color name="mdtp_accent_color_dark">#07263B</color>
 </resources>

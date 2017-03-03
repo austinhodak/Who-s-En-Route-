@@ -44,6 +44,8 @@ public class PopupActivity extends Activity implements View.OnClickListener {
     private FirebaseDatabase firebaseDatabase;
     private FirebaseUser firebaseUser;
     private String department;
+    private boolean mIsLocationTrackingEnabled;
+    private Intent locationService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,6 +110,9 @@ public class PopupActivity extends Activity implements View.OnClickListener {
                 department = extras.getString("department");
             }
         }
+
+        mIsLocationTrackingEnabled = sharedPreferences.getBoolean("pref_map_response_enable", false);
+        locationService = new Intent(this, WLocationService.class);
     }
 
     @Override
@@ -123,13 +128,13 @@ public class PopupActivity extends Activity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.popup_station:
-                updateRespondingStatus(0);
+                respondStation();
                 break;
             case R.id.popup_scene:
-                updateRespondingStatus(1);
+                respondScene();
                 break;
             case R.id.popup_cr:
-                updateRespondingStatus(2);
+                respondCant();
                 break;
         }
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -222,5 +227,73 @@ public class PopupActivity extends Activity implements View.OnClickListener {
                 });
                 break;
         }
+    }
+
+    public void respondStation() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        Date date = new Date();
+        String mLastUpdateTime = dateFormat.format(date);
+
+        Map<String, Object> respondingToStation = new HashMap<String, Object>();
+        respondingToStation.put("respondingTo", "Station");
+        respondingToStation.put("isResponding", true);
+        respondingToStation.put("respondingTime", mLastUpdateTime);
+        respondingToStation.put("respondingAgency", department);
+        userReference.updateChildren(respondingToStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.getException() != null) {
+                    task.getException().printStackTrace();
+                }
+            }
+        });
+        if (mIsLocationTrackingEnabled)
+            getApplicationContext().startService(locationService);
+    }
+
+    public void respondScene() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        Date date = new Date();
+        String mLastUpdateTime = dateFormat.format(date);
+
+        Map<String, Object> respondingToScene = new HashMap<String, Object>();
+        respondingToScene.put("respondingTo", "Scene");
+        respondingToScene.put("isResponding", true);
+        respondingToScene.put("respondingTime", mLastUpdateTime);
+        respondingToScene.put("respondingAgency", department);
+        userReference.updateChildren(respondingToScene).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.getException() != null) {
+                    task.getException().printStackTrace();
+                }
+            }
+        });
+        if (mIsLocationTrackingEnabled)
+            getApplicationContext().startService(locationService);
+    }
+
+    public void respondCant() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        Date date = new Date();
+        String mLastUpdateTime = dateFormat.format(date);
+
+        Map<String, Object> cantRespond = new HashMap<String, Object>();
+        cantRespond.put("respondingTo", "Can't Respond");
+        cantRespond.put("isResponding", true);
+        cantRespond.put("respondingTime", mLastUpdateTime);
+        cantRespond.put("respondingAgency", department);
+        userReference.updateChildren(cantRespond).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.getException() != null) {
+                    task.getException().printStackTrace();
+                }
+            }
+        });
+        getApplicationContext().stopService(locationService);
     }
 }

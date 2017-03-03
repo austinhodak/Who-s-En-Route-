@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,8 +37,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(final RemoteMessage remoteMessage) {
-        String department = remoteMessage.getData().get("department");
+        String department = remoteMessage.getData().get("departmentKey");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        Log.d(TAG, remoteMessage + "");
 
         boolean incidentNotificationEnabled = true;
         boolean mManpowerNotificationEnable = true;
@@ -55,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         switch (remoteMessage.getData().get("notification-type")) {
             case "incident":
                 if (incidentNotificationEnabled) {
-                    if (sharedPreferences.getString(SettingsActivity.SettingsMain.KEY_INCIDENT_NOTIFY_TYPE, "Notification").equalsIgnoreCase("popup dialog")) {
+                    //if (sharedPreferences.getString(SettingsActivity.SettingsMain.KEY_INCIDENT_NOTIFY_TYPE, "Notification").equalsIgnoreCase("popup dialog")) {
 
                         FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -63,13 +66,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 /*Bug Fix! Was only showing IF responding, fixed. !((boolean) dataSnapshot.child("isResponding").getValue())*/
                                 if ((boolean)dataSnapshot.child("isResponding").getValue()) {
                                     //Responding, Don't Show Popup, Still Notify
+                                    notifyPopup(remoteMessage);
                                 } else {
                                     Intent intent = new Intent(MyFirebaseMessagingService.this, PopupActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.putExtra("incidentTitle", remoteMessage.getData().get("incidentTitle"));
                                     intent.putExtra("incidentDesc", remoteMessage.getData().get("incidentDesc"));
-                                    intent.putExtra("department", remoteMessage.getData().get("department"));
+                                    intent.putExtra("department", remoteMessage.getData().get("departmentKey"));
                                     startActivity(intent);
+                                    notifyPopup(remoteMessage);
                                 }
                             }
 
@@ -78,11 +83,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                             }
                         });
-                        notifyPopup(remoteMessage);
-                    } else if (sharedPreferences.getString(SettingsActivity.SettingsMain.KEY_INCIDENT_NOTIFY_TYPE, "Notification").equalsIgnoreCase("notification")) {
+
+                    //} else if (sharedPreferences.getString(SettingsActivity.SettingsMain.KEY_INCIDENT_NOTIFY_TYPE, "Notification").equalsIgnoreCase("notification")) {
                         //No popup, just notification
-                        notifyPopup(remoteMessage);
-                    }
+                    //    notifyPopup(remoteMessage);
+                    //}
                 } else {
                     //Notifications disabled for incidents, do nothing.
                     break;
@@ -106,7 +111,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void notifyPopup(RemoteMessage remoteMessage) {
-        String department = remoteMessage.getData().get("department");
+        String department = remoteMessage.getData().get("departmentKey");
 
         Intent intent = new Intent(this, NavDrawerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -162,7 +167,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void notifyManpower(RemoteMessage remoteMessage) {
-        String department = remoteMessage.getData().get("department");
+        String department = remoteMessage.getData().get("departmentKey");
 
         Intent intent = new Intent(this, NavDrawerActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
